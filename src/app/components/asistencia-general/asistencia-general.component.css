@@ -1,0 +1,97 @@
+/* Estilo para el contenedor */
+.file-input-container {
+    display: inline-block;
+    position: relative;
+}
+
+/* Estilo para el input de archivo */
+.file-input {
+    display: none;
+    /* Oculta el input de archivo real */
+}
+
+/* Estilo para el botón personalizado */
+.file-input-label {
+    display: inline-block;
+    padding: 10px 20px;
+    /* Personaliza el espaciado y el tamaño del botón */
+    background-color: #005e3d;
+    /* Color de fondo del botón */
+    color: #fff;
+    /* Color de texto del botón */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Estilo para el botón personalizado en hover */
+.file-input-label:hover {
+    background-color: #005e3d;
+    /* Cambia el color de fondo en hover */
+}
+
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Estilo para el botón de búsqueda (si es necesario) */
+.btn-buscar {
+    background-color: #005e3d;
+    /* Color de fondo del botón */
+    color: #fff;
+    /* Color del texto del botón */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+/* Cambiar el color del fondo del botón cuando se le pasa el mouse */
+.btn-buscar:hover {
+    background-color: #005e3d;
+}
+
+mat-form-field {
+    min-width: 100%;
+    max-height: 70%;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.agregar {  
+    width: 200px;
+    background-color: #005e3d;
+    color: white;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    font-family: inherit;
+    border: none;
+    height: 40px;
+  }
+  
+  .a {
+    margin-bottom: 8px;
+    margin-top: 0%;
+  }
+  
+  .agregar:hover {
+    color: white;
+    border: solid transparent;
+    border-radius: 8px;
+    border: black;
+    opacity: 0.8; 
+  }
+
+  .fuente-li{
+    font-size: 1.2rem;
+  }

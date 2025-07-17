@@ -1,0 +1,188 @@
+<div class="cont">
+
+    <p>Reporte de clasificacionHorasPorDia</p>
+
+    <div class="row g-3">
+        <div class="col-12 col-sm-6 col-md-2">
+            <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+            <input type="date" id="fechaInicio" class="form-control" [formControl]="fechaInicio" [max]="maxDate" />
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-2">
+            <label for="fechaFin" class="form-label">Fecha Fin</label>
+            <input type="date" id="fechaFin" class="form-control" [formControl]="fechaFin" [max]="maxDate"
+                [min]="fechaInicio.value | date: 'yyyy-MM-dd'" />
+        </div>
+
+        <div class="col-12 col-md-4">
+            <mat-form-field class="w-100">
+                <mat-label>Empleado</mat-label>
+                <input type="text" matInput [formControl]="keyword" (input)="buscarEmpleado()"
+                    [matAutocomplete]="auto" />
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of listaEmpleados" [value]="option.nombre"
+                        (click)="seleccionarEmpleado(option)">
+                        {{ option.nombre }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <label for="area" class="form-label">Área</label>
+            <ngx-select [items]="listaAreas" [formControl]="filtroArea"></ngx-select>
+        </div>
+
+        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
+            <button class="agregar w-100 " mat-raised-button (click)="openLoading(templateLoading)"
+                [disabled]="isSending">
+                <span>Generar orden</span>
+            </button>
+        </div>
+        <div class="col-md-2 col-12 d-flex justify-content-center align-items-center">
+            <button class="agregar w-100" color="primary" mat-raised-button (click)="descargarArchivoCSV()">
+                <mat-icon>ios_share</mat-icon>
+                <span>Exportar</span>
+            </button>
+        </div>
+    </div>
+
+
+
+    <div class="table-responsive table-wrapper">
+        <section class="example-container mat-elevation-z8 card">
+            <div class="table-container">
+                <table mat-table [dataSource]="dataSource" class="custom-table" matSort>
+
+                    <ng-container matColumnDef="empleado" sticky>
+                        <th mat-header-cell *matHeaderCellDef class="empleado-column">Empleado</th>
+                        <td mat-cell *matCellDef="let element" class="empleado-column">
+                            {{element.empleado.nombre}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nd">
+                        <th mat-header-cell *matHeaderCellDef>ND</th>
+                        <td mat-cell *matCellDef="let element"> {{formatDuration(element.clasificacionHorasPorDia.laborales?.diurnas ||
+                            '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nn">
+                        <th mat-header-cell *matHeaderCellDef>NN</th>
+                        <td mat-cell *matCellDef="let element"> {{formatDuration(element.clasificacionHorasPorDia.laborales?.nocturnas ||
+                            '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ned">
+                        <th mat-header-cell *matHeaderCellDef>NED</th>
+                        <td mat-cell *matCellDef="let element" class="custom-column-color">
+                            {{formatDuration(element.clasificacionHorasPorDia.laborales?.extraDiurnas || '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="nen">
+                        <th mat-header-cell *matHeaderCellDef>NEN</th>
+                        <td mat-cell *matCellDef="let element" class="custom-column-color">
+                            {{formatDuration(element.clasificacionHorasPorDia.laborales?.extraNocturnas || '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dd">
+                        <th mat-header-cell *matHeaderCellDef>DD</th>
+                        <td mat-cell *matCellDef="let element"> {{ formatDuration(element.clasificacionHorasPorDia?.dominicales?.diurnas ||
+                            '0' )}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dn">
+                        <th mat-header-cell *matHeaderCellDef>DN</th>
+                        <td mat-cell *matCellDef="let element"> {{formatDuration(element.clasificacionHorasPorDia.dominicales?.nocturnas ||
+                            '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ded">
+                        <th mat-header-cell *matHeaderCellDef>DED</th>
+                        <td mat-cell *matCellDef="let element" class="custom-column-color">
+                            {{formatDuration(element.clasificacionHorasPorDia.dominicales?.extraDiurnas || '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="den">
+                        <th mat-header-cell *matHeaderCellDef>DEN</th>
+                        <td mat-cell *matCellDef="let element" class="custom-column-color">
+                            {{formatDuration(element.clasificacionHorasPorDia.dominicales?.extraNocturnas || '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fd">
+                        <th mat-header-cell *matHeaderCellDef>FD</th>
+                        <td mat-cell *matCellDef="let element"> {{formatDuration(element.clasificacionHorasPorDia.festivos?.diurnas ||
+                            '0')}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fn">
+                        <th mat-header-cell *matHeaderCellDef>FN</th>
+                        <td mat-cell *matCellDef="let element"> {{formatDuration(element.clasificacionHorasPorDia.festivos?.nocturnas ||
+                            '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fed">
+                        <th mat-header-cell *matHeaderCellDef>FED</th>
+                        <td mat-cell *matCellDef="let element" class="custom-column-color">
+                            {{formatDuration(element.clasificacionHorasPorDia.festivos?.extraDiurnas || '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fen">
+                        <th mat-header-cell *matHeaderCellDef>FEN</th>
+                        <td mat-cell *matCellDef="let element" class="custom-column-color">
+                            {{formatDuration(element.clasificacionHorasPorDia.festivos?.extraNocturnas || '0')}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dfd">
+                        <th mat-header-cell *matHeaderCellDef>DFD</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{formatDuration(element.clasificacionHorasPorDia.dominicalesFestivos?.diurnas || '0')}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dfn">
+                        <th mat-header-cell *matHeaderCellDef>DFN</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{formatDuration(element.clasificacionHorasPorDia.dominicalesFestivos?.nocturnas || '0')}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dfed">
+                        <th mat-header-cell *matHeaderCellDef>DFED</th>
+                        <td mat-cell *matCellDef="let element" class="custom-column-color">
+                            {{formatDuration(element.clasificacionHorasPorDia.dominicalesFestivos?.extraDiurnas || '0')}}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dfen">
+                        <th mat-header-cell *matHeaderCellDef>DFEN</th>
+                        <td mat-cell *matCellDef="let element" class="custom-column-color">
+                            {{formatDuration(element.clasificacionHorasPorDia.dominicalesFestivos?.extraNocturnas ||
+                            '0')}}
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="6">No hay datos</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="paginator-container">
+                <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="totalItems"
+                    [pageSize]="size" [disabled]="disabled" [showFirstLastButtons]="showFirstLastButtons"
+                    [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
+                    [pageIndex]="page" aria-label="Select page"></mat-paginator>
+            </div>
+        </section>
+    </div>
+
+
+</div>
+
+<ng-template #templateLoading>
+    <h2 style="text-align: center;">Cargando...</h2>
+    <mat-progress-bar mode="indeterminate" *ngIf="IsWait"> </mat-progress-bar>
+</ng-template>

@@ -1,0 +1,34 @@
+<form class="form-container" #f="ngForm" class="form-container" [formGroup]="login" novalidat >
+   
+    <mat-card>
+       
+        <img class="avatar mt-2" src="./assets/logo.png" />
+        <p class="titulo">Asistencia en linea</p>
+        <mat-card-content>     
+         
+            <div class="cold-md-6" >
+                <mat-form-field appearance="outline">
+                    <mat-label>Usuario</mat-label>
+                    <input matInput name="nombreUsuario" formControlName="userName" required>
+                </mat-form-field>
+            </div>
+            <div class="cold-md-6">
+                <mat-form-field appearance="outline">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" name="contrasena" formControlName="contrasena"
+                        required>
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    
+                </mat-form-field>
+            </div>             
+            
+            <div class="cold-md-6">
+                <button  alt="Ingreso" [disabled]="!login.valid" class="mat-raised-button button-ingreso" mat-raised-button
+                 [disabled]="botonHabilitado"  (click)="onLogin()" type="submit">Ingresar</button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</form>

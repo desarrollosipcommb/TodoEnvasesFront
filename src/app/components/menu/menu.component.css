@@ -1,0 +1,125 @@
+mat-toolbar {
+    background-color: #005e3d;
+    color: white;
+    margin-bottom: 0%;
+}
+
+.row {
+    width: 100%;
+}
+
+mat-drawer {
+    margin: 10px;
+    width: 350px;
+    height: auto;
+    border-right: none;
+    background: #dbdbdb;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+span {
+    margin-left: 20px;
+    margin-bottom: 0px;
+}
+
+mat-expansion-panel {
+    display: inline;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+mat-drawer-container {
+    height: calc(100vh - 65px);
+}
+
+.menu-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1rem;
+    margin-bottom: 5px;
+    background: #dbdbdb;
+    height: 35px;
+}
+
+/*
+.top{
+    border-radius: 5px;
+    background-color:#dbdbdb
+}*/
+
+.avatar {
+    padding-top: 0px;
+    height: 50px;
+    margin-left: 15px;
+
+}
+
+.avatar2 {
+    padding-top: 0px;
+    width: 120px;
+    margin-left: 15px;
+}
+
+mat-icon {
+    font-size: 1.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.name {
+    margin-top: 8px;
+    font-weight: normal;
+}
+
+
+
+button {
+    margin-top: 0px;
+    background-color: transparent;
+    border: 0ch;
+}
+
+
+
+mat-divider {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+
+
+
+
+
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.cont {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.content {
+    flex: 1;
+}
+
+footer {
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+    background-color: #005e3d;
+}

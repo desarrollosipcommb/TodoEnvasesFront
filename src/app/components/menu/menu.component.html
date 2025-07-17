@@ -1,0 +1,129 @@
+<mat-toolbar>
+  <button mat-icon-button class="mat-icon-button" (click)="sidenav.toggle()" *ngIf="config.islogged">
+    <mat-icon>
+      menu
+    </mat-icon>
+  </button>
+  <span class="spacer"></span>
+  <div>
+    <span *ngIf="config.displayName"></span>
+    <button mat-icon-button class="mat-icon-button" routerLink="/" *ngIf="!config.islogged">
+      <mat-icon>
+        account_circle
+      </mat-icon>
+    </button>
+
+    <button mat-icon-button class="mat-icon-button" routerLink="/" (click)="onLogOut()" *ngIf="config.islogged">
+      <mat-icon>
+        exit_to_app
+      </mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+
+<mat-drawer-container>
+  <mat-drawer #sidenav="matDrawer" class="toolbar" *ngIf="config.islogged">
+    <img class="avatar " src="./assets/logo.png" />
+    <mat-divider></mat-divider>
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/programacion/listar"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
+      <mat-icon>list</mat-icon>
+      <span>Lista programaciones</span>
+    </button>
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/turnos/listar"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
+      <mat-icon>alarm</mat-icon>
+      <span>Turnos</span>
+    </button>
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/asistencia"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('EMPLEADO')||tokenService.validarRol('JEFE')">
+      <mat-icon>insert_invitation</mat-icon>
+      <span>Marcación</span>
+    </button>
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/asistencia/general"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('TABLET')">
+      <mat-icon>insert_invitation</mat-icon>
+      <span>Asistencia general</span>
+    </button>
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/marcacion/listar"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
+      <mat-icon>playlist_add_check</mat-icon>
+      <span>Registros</span>
+    </button>
+    <!--
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="licencias/listar"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('EMPLEADO')||tokenService.validarRol('JEFE')">
+      <mat-icon>lists</mat-icon>
+      <span>Novedades laborales</span>
+    </button>
+-->
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/programacion/exportar"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
+      <mat-icon>download</mat-icon>
+      <span>Exportar programaciones</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/empleado/listar"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
+      <mat-icon>group</mat-icon>
+      <span>Empleados</span>
+    </button>
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/usuarios-tablet/listar"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
+      <mat-icon>person</mat-icon>
+      <span>Usuarios Tablet</span>
+    </button>
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/area/listar"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
+      <mat-icon>location_city</mat-icon>
+      <span>Areas</span>
+    </button>
+    <!--
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/reporte"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
+      <mat-icon>assignment</mat-icon>
+      <span>Reportes</span>
+    </button>
+-->
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="reporte-horas"
+      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
+      <mat-icon>lists</mat-icon>
+      <span>Reporte de horas</span>
+    </button>
+    <!--
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="tipos-licencias/listar"
+      *ngIf="tokenService.validarRol('Administrador')">
+      <mat-icon>toc</mat-icon>
+      <span>Tipos de novedades</span>
+    </button>
+-->
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="log/listar"
+      *ngIf="tokenService.validarRol('Administrador')">
+      <mat-icon>assignment</mat-icon>
+      <span>Log</span>
+    </button>
+  </mat-drawer>
+
+
+  <mat-drawer-content>
+    <div class="cont">
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+      <footer>
+        {{config.version}} Powered by Sipcommb © {{config.anio}}
+      </footer>
+    </div>
+  </mat-drawer-content>
+
+</mat-drawer-container>

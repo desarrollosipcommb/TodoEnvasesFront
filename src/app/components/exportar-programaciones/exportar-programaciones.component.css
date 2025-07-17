@@ -1,0 +1,102 @@
+.cont {
+    padding: 20px;
+}
+
+p {
+    padding-top: 2px;
+    padding-left: 0px;
+    width: 100%;
+    color: #005e3d;
+    font-size: 25px;
+    font-weight: 1000;
+    text-align: center;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+
+}
+
+.agregar {
+    width: 200px;
+    background-color: #005e3d;
+    color: white;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    font-family: inherit;
+    border: none;
+    height: 40px;
+}
+
+.a {
+    margin-bottom: 8px;
+    margin-top: 0%;
+}
+
+
+
+
+
+mat-form-field {
+    min-width: 100%;
+
+    padding-top: 10px;
+}
+
+
+
+.input-group {
+    height: 40px;
+}
+
+
+
+/* Estilo para etiquetas */
+.form-label {
+    font-weight: bold;
+    color: #333;
+    /* Color de etiquetas */
+}
+
+
+
+
+
+
+/* Estilo para el botón de búsqueda (si es necesario) */
+.btn-buscar {
+    background-color: #005e3d;
+    /* Color de fondo del botón */
+    color: #fff;
+    /* Color del texto del botón */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+/* Cambiar el color del fondo del botón cuando se le pasa el mouse */
+.btn-buscar:hover {
+    background-color: #20B2AA;
+}
+
+
+
+
+
+
+.empleado {
+    width: 320px;
+}
+
+.area-col {
+    width: 130px;
+    /* o el valor que prefieras */
+    white-space: nowrap;
+    /* evita que el texto se rompa en varias líneas */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* muestra "..." si el texto es muy largo */
+}
+
+
+.row {
+    margin-bottom: 10px;
+}
