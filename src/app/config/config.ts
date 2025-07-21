@@ -15,7 +15,7 @@ export class Config {
     islogged: boolean = false;
     user: any;
 
-    version = 'V2.0.1';
+    version = 'V b0.1';
     anio = '2025';
 
     constructor(public tokenService: TokenService) { }

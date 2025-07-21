@@ -55,13 +55,6 @@
       <mat-icon>playlist_add_check</mat-icon>
       <span>Registros</span>
     </button>
-    <!--
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="licencias/listar"
-      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('EMPLEADO')||tokenService.validarRol('JEFE')">
-      <mat-icon>lists</mat-icon>
-      <span>Novedades laborales</span>
-    </button>
--->
 
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/programacion/exportar"
       *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
@@ -83,7 +76,7 @@
       <span>Usuarios Tablet</span>
     </button>
 
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/area/listar"
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/envase/listar"
       *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
       <mat-icon>location_city</mat-icon>
       <span>Areas</span>

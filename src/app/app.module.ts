@@ -59,6 +59,7 @@ import { AreasComponent } from './components/areas/areas.component';
 import { UsuarioTabletComponent } from './components/usuario-tablet/usuario-tablet.component';
 import { TurnosComponent } from './components/turnos/turnos.component';
 import { DatePipe } from '@angular/common';
+import { EnvasesComponent } from './components/envases/envases.component';
 
 
 
@@ -94,6 +95,7 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
     AreasComponent,
     UsuarioTabletComponent,
     TurnosComponent,
+    EnvasesComponent,
   ],
   imports: [
     HttpClientModule,
