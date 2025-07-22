@@ -39,24 +39,20 @@ export class EnvasesComponent implements OnInit, OnDestroy {
   pageEvent: PageEvent;
 
   modalRef: BsModalRef;
-  modalUbicacion: BsModalRef
   btnConfirmar: string = '';
   idEnvase: any;
   listaTipoEnvases: any
   nombreControl = new FormControl('', [Validators.required]);
   descripcionControl = new FormControl('', [Validators.required]);
   diametroControl = new FormControl('', [Validators.required]);
-  cantidadControl = new FormControl('', [Validators.required]);
-  unidadPrecioControl = new FormControl('', [Validators.required]);
-  docenaPrecioControl = new FormControl('', [Validators.required]);
-  cienPrecioControl = new FormControl('', [Validators.required]);
-  pacaPrecioControl = new FormControl('', [Validators.required]);
-  unidadPacaControl = new FormControl('', [Validators.required]);
+  cantidadControl = new FormControl(0, [Validators.required]);
+  unidadPrecioControl = new FormControl(0, [Validators.required]);
+  docenaPrecioControl = new FormControl(0, [Validators.required]);
+  cienPrecioControl = new FormControl(0, [Validators.required]);
+  pacaPrecioControl = new FormControl(0, [Validators.required]);
+  unidadPacaControl = new FormControl(0, [Validators.required]);
   compatibleControl = new FormControl('', [Validators.required]);
   incompatibleControl = new FormControl('', [Validators.required]);
-  latitud: string;
-  longitud: string;
-  botonUbicacion = false;
 
   IsWait: boolean = false;
   botonDeshabilitado = false;
@@ -105,7 +101,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Lista los areas registrados
+     * Lista los envases registrados
      * 
   */
   private listar(): void {
@@ -167,10 +163,24 @@ export class EnvasesComponent implements OnInit, OnDestroy {
 
   private limpiar(): void {
     this.nombreControl.setValue(null);
+    this.diametroControl.setValue(null)
+    this.cantidadControl.setValue(null)
+    this.unidadPrecioControl.setValue(null)
+    this.docenaPrecioControl.setValue(null)
+    this.cienPrecioControl.setValue(null)
+    this.pacaPrecioControl.setValue(null)
+    this.unidadPacaControl.setValue(null)
   }
 
   private setDataForm(envase: EnvaseModel): void {
     this.nombreControl.setValue(envase.name)
+    this.diametroControl.setValue(envase.diameter)
+    this.cantidadControl.setValue(envase.quantity)
+    this.unidadPrecioControl.setValue(envase.unitPrice)
+    this.docenaPrecioControl.setValue(envase.docenaPrice)
+    this.cienPrecioControl.setValue(envase.cienPrice)
+    this.pacaPrecioControl.setValue(envase.pacaPrice)
+    this.unidadPacaControl.setValue(envase.unitsInPaca)
   }
 
 
@@ -196,7 +206,15 @@ export class EnvasesComponent implements OnInit, OnDestroy {
    */
   getData() {
     const envase = new EnvaseModel();
-    envase.name = this.nombreControl.value;
+    envase.name = String(this.nombreControl.value);
+    envase.diameter = String(this.diametroControl.value)
+    envase.quantity = Number(this.cantidadControl.value)
+    envase.unitPrice = Number(this.unidadPrecioControl.value)
+    envase.docenaPrice = Number(this.docenaPrecioControl.value)
+    envase.cienPrice = Number(this.cienPrecioControl.value)
+    envase.pacaPrice = Number(this.pacaPrecioControl.value)
+    envase.unitsInPaca = Number(this.unidadPacaControl.value)
+
     return envase;
   }
 
@@ -233,7 +251,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
       .subscribe({
         next: next => {
           this.botonDeshabilitado = false
-          this.alerta.success('Area actualizada', '');
+          this.alerta.success('Envase actualizada', '');
           this.modalRef.hide();
           this.listar();
           this.limpiar();
@@ -251,7 +269,6 @@ export class EnvasesComponent implements OnInit, OnDestroy {
    * @param tipo Eliminar Activar
    */
   confirmar(id: number, tipo: string): void {
-
     Swal.fire({
       title: 'Esta seguro?',
       icon: 'warning',
@@ -263,9 +280,9 @@ export class EnvasesComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
         if (tipo == 'Eliminar') {
-          this.eliminarArea(id)
+          this.eliminarEnvase(id)
         } else {
-          this.activarArea(id)
+          this.activarEnvase(id)
         }
 
       }
@@ -273,28 +290,28 @@ export class EnvasesComponent implements OnInit, OnDestroy {
 
   }
 
-  eliminarArea(id: number): void {
+  eliminarEnvase(id: number): void {
     this.envaseService.eliminar(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
-          this.alerta.success('Area eliminada', '');
+          this.alerta.success('Envase eliminada', '');
           this.listar();
         }, error: err => {
-          this.alerta.error('No se pudo eliminar el area', '');
+          this.alerta.error('No se pudo eliminar el envase', '');
         }
       });
   }
 
-  activarArea(id: number): void {
+  activarEnvase(id: number): void {
     this.envaseService.activar(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
-          this.alerta.success('Area activada', '');
+          this.alerta.success('Envase activada', '');
           this.listar();
         }, error: err => {
-          this.alerta.error('No se pudo activar el area', '');
+          this.alerta.error('No se pudo activar el envase', '');
         }
       });
   }

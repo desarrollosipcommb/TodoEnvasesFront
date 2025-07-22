@@ -1,5 +1,5 @@
 <div class="cont">
-    <p>Lista de areas</p>
+    <p>Lista de tipos de envases</p>
     <br>
     <div class="row">
         <div class="col-12 col-md-6 mb-3">
@@ -15,21 +15,7 @@
                     <button class="agregar mt-3" color="primary" mat-raised-button
                         (click)="openModal(templateOn, null)">
                         <mat-icon>add</mat-icon>
-                        <span>Agregar área</span>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-auto mb-2">
-                    <button class="agregar mt-3" color="primary" mat-raised-button
-                        (click)="openCoordenadas(templateUbicacion)">
-                        <span>Modificar ubicación</span>
-                    </button>
-                </div>
-
-                <div class="col-12 col-md-auto mb-2">
-                    <button [disabled]="botonUbicacion" class="agregar mt-3" color="primary" mat-raised-button
-                        (click)="capturarUbicacion()">
-                        <mat-icon>travel_explore</mat-icon>
+                        <span>Agregar tipo envase</span>
                     </button>
                 </div>
             </div>
@@ -43,7 +29,11 @@
                         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
                             <ng-container matColumnDef="nombre">
                                 <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                                <td mat-cell *matCellDef="let element">{{ element.nombreArea}} </td>
+                                <td mat-cell *matCellDef="let element">{{ element.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="diametro">
+                                <th mat-header-cell *matHeaderCellDef>Diámetro</th>
+                                <td mat-cell *matCellDef="let element">{{ element.diameter}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="estado">
@@ -109,13 +99,29 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" color="warn" aria-label="Close"
                 (click)="modalRef.hide()"></button>
         </div>
-        <div class="container">
-            <div class="col-md-12">
-                <mat-form-field appearance="outline">
-                    <mat-label>Nombre</mat-label>
-                    <input matInput [formControl]="areaControl">
-                </mat-form-field>
-            </div>
+        <div class="container ">
+            <form class="row col-md-12">
+                <div class="col-md-8">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput [formControl]="nombreControl">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Diámetro</mat-label>
+                        <input matInput type="" [formControl]="diametroControl">
+                    </mat-form-field>
+                </div>
+
+                <div class="col-md-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Descripción</mat-label>
+                        <input matInput type="text-area" [formControl]="descripcionControl">
+                    </mat-form-field>
+                </div>
+            </form>
         </div>
 
     </div>
@@ -124,32 +130,6 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
             (click)="modalRef.hide()">Volver</button>
         <button type="button" class="agregar" mat-raised-button (click)="tipoAccion(btnConfirmar)"
-            [disabled]="botonDeshabilitado">{{btnConfirmar}}</button>
-
-    </div>
-
-</ng-template>
-
-<ng-template #templateUbicacion>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5" id="staticBackdropLabel">{{tituloTemple}}</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" color="warn" aria-label="Close"
-                (click)="modalUbicacion.hide()"></button>
-        </div>
-        <div class="container">
-            <div class="col-md-12">
-                <mat-form-field appearance="outline">
-                    <mat-label>Coordenadas</mat-label>
-                    <input (keyup)="onInputCoordenadas($event)" matInput [formControl]="coordenadasControl">
-                </mat-form-field>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-            (click)="modalUbicacion.hide()">Volver</button>
-        <button type="button" class="agregar" mat-raised-button (click)="updateUbicacion()"
             [disabled]="botonDeshabilitado">{{btnConfirmar}}</button>
     </div>
 </ng-template>

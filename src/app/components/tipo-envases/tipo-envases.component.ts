@@ -1,31 +1,27 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subject, takeUntil } from 'rxjs';
-import { AreaModel } from 'src/app/models/area-model';
+import { TipoEnvaseModel } from 'src/app/models/tipo-envase-model';
 import { AlertaService } from 'src/app/services/alerta.service';
-import { AreaService } from 'src/app/services/area.service';
-import { ClienteService } from 'src/app/services/cliente.service';
-import { GeolocationService } from 'src/app/services/geolocation.service';
+import { TipoEnvaseService } from 'src/app/services/tipo-envase.service';
 import { TokenService } from 'src/app/services/token/token.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-areas',
-  templateUrl: './areas.component.html',
-  styleUrls: ['./areas.component.css']
+  selector: 'app-tipo-envases',
+  templateUrl: './tipo-envases.component.html',
+  styleUrls: ['./tipo-envases.component.css']
 })
-export class AreasComponent implements OnInit, OnDestroy {
+export class TipoEnvasesComponent implements OnInit, OnDestroy {
 
   tituloTemple: string = ''
-
-  displayedColumns: string[] = ['nombre', 'estado', 'editar', 'eliminar'];
+  displayedColumns: string[] = ['nombre', 'diametro', 'estado', 'editar', 'eliminar'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-
 
   //pagination rest api
   page: number = 0;
@@ -42,14 +38,11 @@ export class AreasComponent implements OnInit, OnDestroy {
   pageEvent: PageEvent;
 
   modalRef: BsModalRef;
-  modalUbicacion: BsModalRef
   btnConfirmar: string = '';
-  idArea: any;
-  areaControl = new FormControl('', [Validators.required]);
-  coordenadasControl = new FormControl('', [Validators.required])
-  latitud: string;
-  longitud: string;
-  botonUbicacion = false;
+  idEnvase: any;
+  nombreControl = new FormControl('', [Validators.required]);
+  descripcionControl = new FormControl('', [Validators.required]);
+  diametroControl = new FormControl('', [Validators.required]);
 
   IsWait: boolean = false;
   botonDeshabilitado = false;
@@ -57,9 +50,7 @@ export class AreasComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   constructor(public modalservice: BsModalService,
-    private areaService: AreaService,
-    private clienteService: ClienteService,
-    private geolocationService: GeolocationService,
+    private tipoEnvaseService: TipoEnvaseService,
     private alerta: AlertaService,
     private router: Router,
     public tokenservice: TokenService) { }
@@ -89,7 +80,7 @@ export class AreasComponent implements OnInit, OnDestroy {
      * 
   */
   private listar(): void {
-    this.areaService.listarPagination(this.size, this.page, this.buscarnombres)
+    this.tipoEnvaseService.listarPagination(this.size, this.page, this.buscarnombres)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: value => {
@@ -127,134 +118,23 @@ export class AreasComponent implements OnInit, OnDestroy {
   * Centra el modal
   */
   configs = {
-    class: 'modal-dialog-centered'
-  }
-
-  openCoordenadas(template: TemplateRef<any>): void {
-    this.modalUbicacion = this.modalservice.show(template, this.configs);
-    this.limpiar();
-    this.tituloTemple = 'Modificar coordenadas';
-    this.btnConfirmar = 'Aceptar';
-  }
-
-  onInputCoordenadas(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    inputElement.value = inputElement.value.replace(/[^0-9.,\-\s]/g, ''); // Permitir solo números, comas, puntos y espacios
-    this.coordenadasControl.setValue(inputElement.value);
-  }
-
-  getCoordenadas() {
-    const coordenadas: string = this.coordenadasControl.value ?? '';
-    if (coordenadas && coordenadas.includes(',')) {
-      const [latitud, longitud] = coordenadas.split(',').map(coord => coord.trim()); // Separa y elimina espacios adicionales
-      return { latitud, longitud };
-    } else {
-      this.alerta.error('', 'Formato inválido. Asegúrate de que las coordenadas estén separadas por una coma.');
-      return null;
-    }
-  }
-
-  /**
-   * Envía los datos del formulario al servio para actualizar el registro
-   */
-  updateUbicacion() {
-    this.botonDeshabilitado = true
-    this.clienteService.actualizarUbicacion(this.getCoordenadas())
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: next => {
-          this.botonDeshabilitado = false
-          this.alerta.success('Ubicación actualizada', '');
-          this.modalUbicacion.hide();
-          this.coordenadasControl.setValue(null);
-        }, error: error => {
-          this.alerta.error(error.error.mensaje, '')
-          this.botonDeshabilitado = false
-        }
-      })
-  }
-
-  /**
-   * Muestra un mensaje de confirmación con la librería swal 
-   * Si el mensaje es confirmado procede a capturar la ubicación y actualiza los parámetros en el cliente
-   */
-  capturarUbicacion(): void {
-
-    Swal.fire({
-      title: '¿Desea actualizar la ubicación?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si!',
-      cancelButtonText: 'Cancelar'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        this.botonUbicacion = true
-        await this.getUbicacion();
-        if ((this.latitud == '') && (this.longitud == '')) {
-          this.alerta.error('Error, no se pudo obtener la ubicación',
-            'Intente recargar la pagina o active la ubicación y proporcione los permisos de ubicación');
-          this.botonUbicacion = false
-        } else {
-          const coordenadas = {
-            latitud: this.latitud.toString(),
-            longitud: this.longitud.toString()
-          };
-          this.clienteService.actualizarUbicacion(coordenadas)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe({
-              next: next => {
-                this.botonUbicacion = false
-                this.alerta.success('Ubicación actualizada', '');
-                this.listar();
-              }, error: error => {
-                this.alerta.error(error.error.mensaje, '')
-                this.botonUbicacion = false
-              }
-            })
-        }
-      }
-    })
-  }
-
-  /**
-   * Clase que utiliza el servicio getCurrentPosition que esta en geolocationService
-   */
-  async getUbicacion() {
-    try {
-      const position: GeolocationPosition = await this.geolocationService.getCurrentPosition();
-      this.latitud = position.coords.latitude.toString()
-      this.longitud = position.coords.longitude.toString()
-    } catch (error) {
-      console.error(error);
-    }
+    class: 'modal-dialog-centered modal-lg'
   }
 
 
-  openModal(template: TemplateRef<any>, area: AreaModel | null): void {
+  openModal(template: TemplateRef<any>, tipoEnvase: TipoEnvaseModel | null): void {
     this.modalRef = this.modalservice.show(template, this.configs);
     this.limpiar();
-    if (!area) {
+    if (!tipoEnvase) {
       this.tituloTemple = 'Registro';
       this.btnConfirmar = 'Agregar';
     } else {
       this.tituloTemple = 'Actualización';
       this.btnConfirmar = 'Actualizar';
-      this.idArea = area.id;
-      this.setDataForm(area);
+      this.idEnvase = tipoEnvase.id;
+      this.setDataForm(tipoEnvase);
     }
   }
-
-  private limpiar(): void {
-    this.areaControl.setValue(null);
-  }
-
-  private setDataForm(area: AreaModel): void {
-    this.areaControl.setValue(area.nombreArea)
-  }
-
-
 
   /**
    * Tipo de accion que se va realizar
@@ -271,24 +151,36 @@ export class AreasComponent implements OnInit, OnDestroy {
     }
   }
 
+  private limpiar(): void {
+    this.nombreControl.setValue(null);
+    this.diametroControl.setValue(null)
+    this.descripcionControl.setValue(null)
+  }
+
+  private setDataForm(tipoEnvase: TipoEnvaseModel): void {
+    this.nombreControl.setValue(tipoEnvase.name)
+    this.diametroControl.setValue(tipoEnvase.diameter)
+    this.descripcionControl.setValue(tipoEnvase.description)
+  }
+
   /**
    * 
    * @returns retorna los datos en el formulario del template
    */
   getData() {
-    const area = new AreaModel();
-    area.nombreArea = this.areaControl.value;
-    return area;
+    const tipoEnvase = new TipoEnvaseModel();
+    tipoEnvase.name = String(this.nombreControl.value)
+    tipoEnvase.diameter = String(this.diametroControl.value)
+    tipoEnvase.description = String(this.descripcionControl.value);
+    return tipoEnvase;
   }
-
-
 
   /**
    * Envía los datos del formulario al servio para registrar
    */
   registrar() {
     this.botonDeshabilitado = true
-    this.areaService.registrar(this.getData())
+    this.tipoEnvaseService.registrar(this.getData())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
@@ -309,7 +201,7 @@ export class AreasComponent implements OnInit, OnDestroy {
    */
   actualizar() {
     this.botonDeshabilitado = true
-    this.areaService.actualizar(this.idArea, this.getData())
+    this.tipoEnvaseService.actualizar(this.idEnvase, this.getData())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: next => {
@@ -344,9 +236,9 @@ export class AreasComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
         if (tipo == 'Eliminar') {
-          this.eliminarArea(id)
+          this.eliminarTipoEnvase(id)
         } else {
-          this.activarArea(id)
+          this.activarTipoEnvase(id)
         }
 
       }
@@ -354,8 +246,8 @@ export class AreasComponent implements OnInit, OnDestroy {
 
   }
 
-  eliminarArea(id: number): void {
-    this.areaService.eliminar(id)
+  eliminarTipoEnvase(id: number): void {
+    this.tipoEnvaseService.eliminar(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
@@ -367,8 +259,8 @@ export class AreasComponent implements OnInit, OnDestroy {
       });
   }
 
-  activarArea(id: number): void {
-    this.areaService.activar(id)
+  activarTipoEnvase(id: number): void {
+    this.tipoEnvaseService.activar(id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
@@ -379,5 +271,4 @@ export class AreasComponent implements OnInit, OnDestroy {
         }
       });
   }
-
 }

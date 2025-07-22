@@ -37,29 +37,21 @@ import { MatSelectModule } from '@angular/material/select';
 import { ProgramacionesComponent } from './components/programaciones/programaciones.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { EmpleadosComponent } from './components/empleados/empleados.component';
-import { ProgramarComponent } from './components/programar/programar.component';
 import { MarcacionesComponent } from './components/marcaciones/marcaciones.component';
 import {
   FixedSizeVirtualScrollStrategy,
   ScrollingModule,
   VIRTUAL_SCROLL_STRATEGY,
 } from '@angular/cdk/scrolling';
-import { LicenciasComponent } from './components/licencias/licencias.component';
-import { TiposLicenciasComponent } from './components/tipos-licencias/tipos-licencias.component';
-import { AsistenciaGeneralComponent } from './components/asistencia-general/asistencia-general.component';
 import { interceptorProvider } from './services/interceptor.service';
 import { GeolocationService } from './services/geolocation.service';
 import { LogsComponent } from './components/logs/logs.component';
-import { AsistenciaComponent } from './components/asistencia/asistencia.component';
 import { ReporteComponent } from './components/reporte/reporte.component';
-import { ExportarProgramacionesComponent } from './components/exportar-programaciones/exportar-programaciones.component';
 import { ErrorPermisoComponent } from './components/error-permiso/error-permiso.component';
-import { ReporteHorasComponent } from './components/reporte-horas/reporte-horas.component';
-import { AreasComponent } from './components/areas/areas.component';
 import { UsuarioTabletComponent } from './components/usuario-tablet/usuario-tablet.component';
-import { TurnosComponent } from './components/turnos/turnos.component';
 import { DatePipe } from '@angular/common';
 import { EnvasesComponent } from './components/envases/envases.component';
+import { TipoEnvasesComponent } from './components/tipo-envases/tipo-envases.component';
 
 
 
@@ -81,21 +73,13 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
     LoginComponent,
     ProgramacionesComponent,
     EmpleadosComponent,
-    ProgramarComponent,
     MarcacionesComponent,
-    LicenciasComponent,
-    TiposLicenciasComponent,
-    AsistenciaGeneralComponent,
     LogsComponent,
-    AsistenciaComponent,
     ReporteComponent,
-    ExportarProgramacionesComponent,
     ErrorPermisoComponent,
-    ReporteHorasComponent,
-    AreasComponent,
     UsuarioTabletComponent,
-    TurnosComponent,
     EnvasesComponent,
+    TipoEnvasesComponent,
   ],
   imports: [
     HttpClientModule,

@@ -1,6 +1,6 @@
 export class EnvaseModel {
     id: number
-    name: string | null
+    name: string
     description: string
     diameter: string
     quantity: number
