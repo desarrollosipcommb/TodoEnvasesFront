@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { JwtModel } from '../models/jwt-model';
 
 export interface EmployeeTable {
-  data: any[];
+  data: LoginModel[];
   currentPage: number;
   totalItems: number;
   totalPages: number;

@@ -1,8 +1,8 @@
 export class LoginModel {
-    nombreUsuario: any;
-    contrasena: any;
-    constructor(nombreUsuario: any, contrasena: any) {
-        this.nombreUsuario = nombreUsuario;
-        this.contrasena = contrasena;
+    username: any;
+    password: any;
+    constructor(username: any, password: any) {
+        this.username = username;
+        this.password = password;
     }
 }
