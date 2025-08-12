@@ -7,6 +7,7 @@ const REFRESHTOKEN_KEY = 'auth-refreshtoken';
 const ID_EMPLEADO = 'Id-empleado';
 const iD_USUARIO = 'Id-usuario';
 const ROL = 'Rol';
+const PERMISSIONS = 'Permissions'
 
 
 @Injectable({
@@ -14,13 +15,14 @@ const ROL = 'Rol';
 })
 export class TokenService {
   roles: Array<string> = [];
+  permisos: Array<string> = [];
   constructor() { }
 
-   /**
-   * Remueve el rol del localStorage y le asigna el nuevo rol
-   * @param rol usuario
-   */
-   public setRol(rol: string): void {
+  /**
+  * Remueve el rol del localStorage y le asigna el nuevo rol
+  * @param rol usuario
+  */
+  public setRol(rol: any): void {
     window.sessionStorage.removeItem(ROL);
     window.sessionStorage.setItem(ROL, rol);
   }
@@ -96,7 +98,7 @@ export class TokenService {
    * Obtiene el username del localStorage
    * @returns string
    */
-  public getUserName(): any  {
+  public getUserName(): any {
     return sessionStorage.getItem(USERNAME_KEY);
   }
 
@@ -107,6 +109,29 @@ export class TokenService {
   public setAuthorities(authorities: string[]): void {
     window.sessionStorage.removeItem(AUTHORITIES_KEY);
     window.sessionStorage.setItem(AUTHORITIES_KEY, JSON.stringify(authorities));
+  }
+
+  /**
+ * Remueve los autotities del localStorage y le asigna los nuevos autotities
+ * @param autorities
+ */
+  public setPermissions(permisos: string[]): void {
+    window.sessionStorage.removeItem(PERMISSIONS);
+    window.sessionStorage.setItem(PERMISSIONS, JSON.stringify(permisos));
+  }
+
+  /**
+ * Obtiene los PERMISSIONS del localStorage y se asigna a un la variable permisos[]
+ * @returns permisos[]
+ */
+  public getPermissions(): string[] {
+    this.permisos = [];
+    if (sessionStorage.getItem(PERMISSIONS)) {
+      JSON.parse(sessionStorage.getItem(PERMISSIONS) || '{}').forEach((authority: { authority: string; }) => {
+        this.permisos.push(authority.authority);
+      });
+    }
+    return this.permisos;
   }
 
   /**
@@ -147,7 +172,7 @@ export class TokenService {
    * @param modulo nombre del modulo
    * @returns 
    */
-  public isAccessV2(tipo: string,modulo: string): boolean {
+  public isAccessV2(tipo: string, modulo: string): boolean {
     const authority: string = `${tipo.toUpperCase()}_${modulo.toUpperCase()}`;
     if (this.getAuthorities().indexOf(authority) > -1) {
       return true;
@@ -156,7 +181,7 @@ export class TokenService {
   }
 
   public validarRol(nombreRol: string): boolean {
-    return this.getRol()=== nombreRol;
+    return this.getRol() === nombreRol;
   }
 
 }

@@ -12,7 +12,7 @@ export interface EmployeeTable {
 }
 
 let cabecera = new HttpHeaders();
-cabecera = cabecera.append('Content-Type', 'application/json');
+//cabecera = cabecera.append('Content-Type', 'application/json');
 
 
 @Injectable({
@@ -29,10 +29,11 @@ url = environment.baseUrl + 'jars/';
     */
   public listarPagination(pageSize: number, pageNumber: number, nombre: string): Observable<EmployeeTable> {
     let params = new HttpParams();
+    let header = new HttpHeaders();
     params = params.append('size', pageSize);
     params = params.append('page', pageNumber);
-    if (nombre != null)
-      params = params.append('nombre', nombre);
+    /*if (nombre != null)
+      params = params.append('nombre', nombre);*/
     return this.httpCliente.get<EmployeeTable>(this.url + 'all', { headers: cabecera, params: params })
   }
 

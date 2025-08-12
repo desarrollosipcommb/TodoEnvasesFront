@@ -1,8 +1,10 @@
 export class JwtModel {
-    id:any;
+    id: any;
     token: any = '';
     type: any = '';
     cedula: any = '';
-    rol:any='';
-    id_empleado:any='';
+    role: any = '';
+    id_empleado: any = '';
+    permissions: any = []
+    username: string;
 }

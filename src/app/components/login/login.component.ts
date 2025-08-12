@@ -53,18 +53,19 @@ export class LoginComponent implements OnInit {
     const login = new LoginModel(this.login.value.userName, this.login.value.contrasena);
     await this.loginService.login(login).subscribe({
       next: (data) => {
+        console.log(data)
         this.isLogged = true;
         this.tokenService.setIdUsuario(data.id);
         this.tokenService.setToken(data.token);
-        this.tokenService.setUserName(data.cedula);
-        this.tokenService.setRol(data.rol)
+        this.tokenService.setUserName(data.username);
+        this.tokenService.setRol(data.role)
         this.tokenService.setIdEmpleado(data.id_empleado);
         this.config.setIsLogged(this.isLogged);
-        this.config.setDisplayName(data.cedula);
+        //this.config.setDisplayName(data.cedula);
         this.config.setUser(data.cedula);
         switch (this.tokenService.getRol()) {
-          case 'TABLET':
-            this.router.navigate(['/asistencia/general']);
+          case 'admin':
+            this.router.navigate(['/envase/listar']);
             break;
 
           case 'EMPLEADO':

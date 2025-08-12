@@ -72,7 +72,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.verifyAdminRole();
     this.listar();
-    this.listarTipoEnvase()
+    //this.listarTipoEnvase()
   }
 
   ngOnDestroy(): void {
@@ -81,7 +81,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
   }
 
   private verifyAdminRole(): void {
-    if (!this.tokenservice.validarRol('Administrador') && !this.tokenservice.validarRol('JEFE')) {
+    if (!this.tokenservice.validarRol('admin')) {
       this.router.navigate(['/error']);
     }
 
