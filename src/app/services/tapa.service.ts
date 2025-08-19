@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
-
 export interface EmployeeTable {
   data: TapaModel[];
   currentPage: number;
@@ -14,7 +13,6 @@ export interface EmployeeTable {
 
 let cabecera = new HttpHeaders();
 cabecera = cabecera.append('Content-Type', 'application/json');
-
 
 @Injectable({
   providedIn: 'root'
