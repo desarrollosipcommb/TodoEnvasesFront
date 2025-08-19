@@ -69,9 +69,9 @@ export class TipoEnvasesComponent implements OnInit, OnDestroy {
   }
 
   private verifyAdminRole(): void {
-    if (!this.tokenservice.validarRol('Administrador') && !this.tokenservice.validarRol('JEFE')) {
+   /* if (!this.tokenservice.validarRol('Administrador') && !this.tokenservice.validarRol('JEFE')) {
       this.router.navigate(['/error']);
-    }
+    }*/
 
   }
 

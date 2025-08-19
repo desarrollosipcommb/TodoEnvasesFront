@@ -34,24 +34,24 @@ import { INgxSelectOptions, NgxSelectModule } from 'ngx-select-ex';
 //import { GeolocationService } from './services/geolocation.service';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
-import { ProgramacionesComponent } from './components/programaciones/programaciones.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { EmpleadosComponent } from './components/empleados/empleados.component';
-import { MarcacionesComponent } from './components/marcaciones/marcaciones.component';
 import {
   FixedSizeVirtualScrollStrategy,
   ScrollingModule,
   VIRTUAL_SCROLL_STRATEGY,
 } from '@angular/cdk/scrolling';
 import { interceptorProvider } from './services/interceptor.service';
-import { GeolocationService } from './services/geolocation.service';
 import { LogsComponent } from './components/logs/logs.component';
-import { ReporteComponent } from './components/reporte/reporte.component';
 import { ErrorPermisoComponent } from './components/error-permiso/error-permiso.component';
 import { UsuarioTabletComponent } from './components/usuario-tablet/usuario-tablet.component';
 import { DatePipe } from '@angular/common';
 import { EnvasesComponent } from './components/envases/envases.component';
 import { TipoEnvasesComponent } from './components/tipo-envases/tipo-envases.component';
+import { QuimicosComponent } from './components/quimicos/quimicos.component';
+import { TapasComponent } from './components/tapas/tapas.component';
+import { CombosComponent } from './components/combos/combos.component';
+import { VentasComponent } from './components/ventas/ventas.component';
 
 
 
@@ -71,15 +71,16 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
     AppComponent,
     MenuComponent,
     LoginComponent,
-    ProgramacionesComponent,
     EmpleadosComponent,
-    MarcacionesComponent,
     LogsComponent,
-    ReporteComponent,
     ErrorPermisoComponent,
     UsuarioTabletComponent,
     EnvasesComponent,
     TipoEnvasesComponent,
+    QuimicosComponent,
+    TapasComponent,
+    CombosComponent,
+    VentasComponent,
   ],
   imports: [
     HttpClientModule,
@@ -121,7 +122,6 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
   providers: [
     DatePipe,
     interceptorProvider,
-    GeolocationService,
     {provide: VIRTUAL_SCROLL_STRATEGY, useClass: CustomVirtualScrollStrategy}],
   bootstrap: [AppComponent]
 })
