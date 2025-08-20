@@ -5,9 +5,9 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
 export interface EmployeeTable {
-  data: QuimicoModel[];
-  currentPage: number;
-  totalItems: number;
+  content: QuimicoModel[];
+  number: number;
+  totalElements: number;
   totalPages: number;
 }
 
@@ -32,8 +32,8 @@ export class QuimicoService {
     params = params.append('size', pageSize);
     params = params.append('page', pageNumber);
     if (nombre != null)
-      params = params.append('nombre', nombre);
-    return this.httpCliente.get<EmployeeTable>(this.url + 'all', { headers: cabecera, params: params })
+      params = params.append('searchName', nombre);
+    return this.httpCliente.get<EmployeeTable>(this.url + 'byName', { headers: cabecera, params: params })
   }
 
 
@@ -74,8 +74,8 @@ export class QuimicoService {
    * @param quimico
    * @returns Respuesta
    */
-  public actualizar(id: number, quimico: QuimicoModel): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `update/${id}`, quimico);
+  public actualizar( quimico: QuimicoModel): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `update`, quimico);
   }
 
   /**
@@ -86,8 +86,8 @@ export class QuimicoService {
    * @param quimico
    * @returns Respuesta
    */
-  public añadirInventario(id: number, quimico: QuimicoModel): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `inventory/${id}`, quimico);
+  public añadirInventario(quimico: QuimicoModel): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `inventory`, quimico);
   }
 
   /**
@@ -95,8 +95,8 @@ export class QuimicoService {
    * @param id id del quimico
    * @returns Response
    */
-  public activar(id: number): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `activate/${id}`, {});
+  public activar(quimicoModel: QuimicoModel): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `activate`, quimicoModel, {});
   }
 
   /**
@@ -104,7 +104,8 @@ export class QuimicoService {
     * @param id del quimico
     * @returns
     */
-  public eliminar(id: number): Observable<any> {
-    return this.httpCliente.delete<any>(this.url + `delete/${id}`, { headers: cabecera })
+  public eliminar(quimicoModel: QuimicoModel): Observable<any> {
+    console.log("Enviando a backend: ", quimicoModel); // 👈 debug
+    return this.httpCliente.put<any>(this.url + `delete`, quimicoModel);
   }
 }
