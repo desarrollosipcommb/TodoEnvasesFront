@@ -1,6 +1,7 @@
 export class QuimicoModel {
-    name: string
-    description: string
-    quantity: number
-    unitPrice: number
+    name: string | null;
+    description: string| null;
+    quantity: number| null;
+    unitPrice: number| null;
+    id: number
 }
