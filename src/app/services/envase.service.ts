@@ -5,10 +5,10 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
 export interface EmployeeTable {
-  data: EnvaseModel[];
-  currentPage: number;
-  totalItems: number;
-  totalPages: number;
+  content: EnvaseModel[]
+   number: number;
+   totalElements: number;
+   totalPages: number;
 }
 
 let cabecera = new HttpHeaders();
@@ -32,14 +32,25 @@ url = environment.baseUrl + 'jars/';
     let header = new HttpHeaders();
     params = params.append('size', pageSize);
     params = params.append('page', pageNumber);
-    /*if (nombre != null)
-      params = params.append('nombre', nombre);*/
-    return this.httpCliente.get<EmployeeTable>(this.url + 'all', { headers: cabecera, params: params })
+      params = params.append('name', nombre);
+
+    return this.httpCliente.get<EmployeeTable>(this.url + 'like-name', { headers: cabecera, params: params })
   }
 
   public listarActivos(): Observable<any> {
     return this.httpCliente.get<any>(this.url + 'all/active', { headers: cabecera })
   }
+
+   /**
+     * Permite añadir inventario a un envase existente en la base de datos. 
+     * Solo necesita el numero a añadir y el nombre del envase. Si el envase no existe, lanzará un error.
+     * Añade inventario a un envase
+     * @param envase
+     * @returns Respuesta
+     */
+    public añadirInventario(envase:EnvaseModel): Observable<any> {
+      return this.httpCliente.put<any>(this.url + `inventory`, envase);
+    }
 
   /**
    * crea un envase
@@ -56,8 +67,8 @@ url = environment.baseUrl + 'jars/';
    * @param envase
    * @returns Respuesta
    */
-  public actualizar(id: number, envase: EnvaseModel): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `update/${id}`, envase);
+  public actualizar( envase: EnvaseModel): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `update`, envase);
   }
 
   /**
@@ -65,8 +76,8 @@ url = environment.baseUrl + 'jars/';
    * @param id id del envase
    * @returns Response
    */
-  public activar(id: number): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `activate/${id}`, {});
+  public activar(nameEnvase:string): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `activate`,nameEnvase, {});
   }
 
   /**
@@ -74,7 +85,7 @@ url = environment.baseUrl + 'jars/';
     * @param id del area
     * @returns
     */
-  public eliminar(id: number): Observable<any> {
-    return this.httpCliente.delete<any>(this.url + `delete/${id}`, { headers: cabecera })
+  public eliminar(nameEnvase:string): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `delete/`,nameEnvase, { headers: cabecera })
   }
 }

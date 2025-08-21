@@ -4,7 +4,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } from 'rxjs';
 import { EnvaseModel } from 'src/app/models/envase-model';
 import { AlertaService } from 'src/app/services/alerta.service';
 import { EnvaseService } from 'src/app/services/envase.service';
@@ -20,14 +20,15 @@ import Swal from 'sweetalert2';
 export class EnvasesComponent implements OnInit, OnDestroy {
 
   tituloTemple: string = ''
-  displayedColumns: string[] = ['nombre', 'estado', 'editar', 'eliminar'];
+  displayedColumns: string[] = ['name', 'diameter', 'quantity', 'docenaPrice', 'cienPrice', 'pacaPrice', 'unitPrice', 'unitsInPaca'
+    ,'inventario', 'editar', 'eliminar'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //pagination rest api
   page: number = 0;
   size: number = 5;
-  buscarnombres: string;
+  buscarnombres: string='';
   totalItems: number = 100;
   totalPages: number;
   currentPage: number;
@@ -59,12 +60,20 @@ export class EnvasesComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
 
+  isInventario: boolean = false;
+  nameRequired: boolean = false;
+
+
   constructor(public modalservice: BsModalService,
     private envaseService: EnvaseService,
     private tipoEnvaseService: TipoEnvaseService,
     private alerta: AlertaService,
     private router: Router,
-    public tokenservice: TokenService) { }
+    public tokenservice: TokenService,
+    
+  ) { 
+
+  }
 
 
 
@@ -72,7 +81,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.verifyAdminRole();
     this.listar();
-    //this.listarTipoEnvase()
+    this.listarTipoEnvase()
   }
 
   ngOnDestroy(): void {
@@ -86,6 +95,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
     }
 
   }
+
 
   listarTipoEnvase(): void {
     this.tipoEnvaseService.listarActivos()
@@ -109,10 +119,11 @@ export class EnvasesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: value => {
-          this.dataSource = new MatTableDataSource(value.data);
-          this.totalItems = value.totalItems;
+          console.log(value.content);
+          this.dataSource = new MatTableDataSource(value.content);
+          this.totalItems = value.totalElements;
           this.totalPages = value.totalPages;
-          this.currentPage = value.currentPage;
+          this.currentPage = value.number;
         }
       })
   }
@@ -142,24 +153,38 @@ export class EnvasesComponent implements OnInit, OnDestroy {
   /*
   * Centra el modal
   */
-  configs = {
-    class: 'modal-dialog-centered modal-xl'
-  }
+configs = {
+  class: 'modal-dialog-centered modal-lg'
+};
 
 
-  openModal(template: TemplateRef<any>, envase: EnvaseModel | null): void {
-    this.modalRef = this.modalservice.show(template, this.configs);
-    this.limpiar();
-    if (!envase) {
-      this.tituloTemple = 'Registro';
-      this.btnConfirmar = 'Agregar';
-    } else {
-      this.tituloTemple = 'Actualización';
-      this.btnConfirmar = 'Actualizar';
-      this.idEnvase = envase.id;
-      this.setDataForm(envase);
+
+  
+    openModal(template: TemplateRef<any>, envase: EnvaseModel | null, tipo: number): void {
+      this.modalRef = this.modalservice.show(template, this.configs);
+      this.limpiar();
+      this.isInventario = false;
+      this.nameRequired = true;
+      switch (tipo) {
+        case 1:
+          this.tituloTemple = 'Registro';
+          this.btnConfirmar = 'Agregar';
+          this.nameRequired = false;
+          break;
+
+        case 2:
+          this.tituloTemple = 'Actualización';
+          this.btnConfirmar = 'Actualizar';
+          this.setDataForm(envase??new EnvaseModel());
+          break;
+        case 3:
+          this.setDataFormIventario(envase??new EnvaseModel());
+          this.isInventario = true;
+          this.tituloTemple = 'Añadir inventario';
+          this.btnConfirmar = 'Agregar inventario';
+          break;
+      }
     }
-  }
 
   private limpiar(): void {
     this.nombreControl.setValue(null);
@@ -181,11 +206,19 @@ export class EnvasesComponent implements OnInit, OnDestroy {
     this.cienPrecioControl.setValue(envase.cienPrice)
     this.pacaPrecioControl.setValue(envase.pacaPrice)
     this.unidadPacaControl.setValue(envase.unitsInPaca)
+    this.unidadPrecioControl.setValue(envase.unitPrice);
+    this.descripcionControl.setValue(envase.description)
+
+  }
+
+   private setDataFormIventario(envase: EnvaseModel): void {
+    this.nombreControl.setValue(envase.name)
+
   }
 
 
 
-  /**
+ /**
    * Tipo de accion que se va realizar
    *
    * @param accion Agregar o Actualizar
@@ -196,7 +229,8 @@ export class EnvasesComponent implements OnInit, OnDestroy {
       this.registrar();
     } else if (accion == 'Actualizar') {
       this.actualizar();
-
+    }else if (accion == 'Agregar inventario') {
+      this.registrarInventario();
     }
   }
 
@@ -214,8 +248,36 @@ export class EnvasesComponent implements OnInit, OnDestroy {
     envase.cienPrice = Number(this.cienPrecioControl.value)
     envase.pacaPrice = Number(this.pacaPrecioControl.value)
     envase.unitsInPaca = Number(this.unidadPacaControl.value)
-
+    envase.unitPrice= Number(this.unidadPrecioControl.value);
+    envase.description= String(this.descripcionControl.value);
     return envase;
+  }
+
+   getDataInventario() {
+    const envase = new EnvaseModel();
+    envase.name = String(this.nombreControl.value);
+    envase.quantity = Number(this.cantidadControl.value)
+    return envase;
+  }
+
+   /**
+  * Envía los datos del formulario al servio para registrar
+  */
+  public registrarInventario(): void {
+    this.botonDeshabilitado = true
+    this.envaseService.añadirInventario(this.getDataInventario())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          this.botonDeshabilitado = false
+          this.alerta.success('Registro exitoso', '');
+          this.modalRef.hide();
+          this.listar();
+        }, error: error => {
+          this.alerta.error(error.error.mensaje, '')
+          this.botonDeshabilitado = false
+        }
+      })
   }
 
 
@@ -246,7 +308,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
    */
   actualizar() {
     this.botonDeshabilitado = true
-    this.envaseService.actualizar(this.idEnvase, this.getData())
+    this.envaseService.actualizar(this.getData())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: next => {
@@ -268,7 +330,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
    * @param id identificardor del registro
    * @param tipo Eliminar Activar
    */
-  confirmar(id: number, tipo: string): void {
+  confirmar(nameEnvase:string, tipo: string): void {
     Swal.fire({
       title: 'Esta seguro?',
       icon: 'warning',
@@ -280,9 +342,9 @@ export class EnvasesComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
         if (tipo == 'Eliminar') {
-          this.eliminarEnvase(id)
+          this.eliminarEnvase(nameEnvase)
         } else {
-          this.activarEnvase(id)
+          this.activarEnvase(nameEnvase)
         }
 
       }
@@ -290,8 +352,8 @@ export class EnvasesComponent implements OnInit, OnDestroy {
 
   }
 
-  eliminarEnvase(id: number): void {
-    this.envaseService.eliminar(id)
+  eliminarEnvase(nameEnvase:string): void {
+    this.envaseService.eliminar(nameEnvase)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
@@ -303,8 +365,8 @@ export class EnvasesComponent implements OnInit, OnDestroy {
       });
   }
 
-  activarEnvase(id: number): void {
-    this.envaseService.activar(id)
+  activarEnvase(nameEnvase:string): void {
+    this.envaseService.activar(nameEnvase)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
