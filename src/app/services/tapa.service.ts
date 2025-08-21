@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
 export interface EmployeeTable {
-  data: TapaModel[];
+  content: TapaModel[];
   currentPage: number;
   totalItems: number;
   totalPages: number;
@@ -123,7 +123,7 @@ export class TapaService {
    * @param tapa
    * @returns Respuesta
    */
-  public añadirInventario(id: number, tapa: TapaModel): Observable<any> {
+  public añadirInventario(tapa: TapaModel): Observable<any> {
     return this.httpCliente.put<any>(this.url + `inventory`, tapa);
   }
 
