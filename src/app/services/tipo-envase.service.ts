@@ -39,7 +39,7 @@ export class TipoEnvaseService {
   }
 
   public listarActivos(): Observable<any> {
-    return this.httpCliente.get<any>(this.url + 'all/active', { headers: cabecera })
+    return this.httpCliente.get<any>(this.url + 'listar', { headers: cabecera })
   }
 
   /**
