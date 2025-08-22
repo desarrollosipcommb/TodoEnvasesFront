@@ -1,4 +1,5 @@
 export class TapaModel {
+    id: number
     name: string
     description: string
     color: string
