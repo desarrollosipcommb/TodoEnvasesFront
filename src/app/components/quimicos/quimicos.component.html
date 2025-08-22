@@ -18,13 +18,6 @@
                         <span>Agregar</span>
                     </button>
                 </div>
-                 <div class="col-12 col-md-auto mb-2">
-                    <button class="agregar mt-3" color="primary" mat-raised-button
-                        (click)="openModal(templateOn, null,3)">
-                        <mat-icon>add</mat-icon>
-                        <span>Agregar Inventario</span>
-                    </button>
-                </div>
             </div>
         </div>
 
@@ -55,6 +48,15 @@
                             <ng-container matColumnDef="estado">
                                 <th mat-header-cell *matHeaderCellDef>Estado</th>
                                 <td mat-cell *matCellDef="let element">{{ getEstado(element.estado)}} </td>
+                            </ng-container>
+                                  <ng-container matColumnDef="inventario">
+                                <th mat-header-cell *matHeaderCellDef>Inventario</th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button mat-icon-button (click)="openModal(templateOn, element, 3)"
+                                        aria-label="inventario">
+                                        <mat-icon>inventory</mat-icon>
+                                    </button>
+                                </td>
                             </ng-container>
 
 
@@ -118,7 +120,7 @@
                 <div class="col-md-12">
                     <mat-form-field appearance="outline">
                         <mat-label>Nombre</mat-label>
-                        <input matInput [formControl]="nameControl">
+                        <input matInput [formControl]="nameControl" [readonly]="isActualizar">
                     </mat-form-field>
                 </div>
                 <div class="col-md-6">
@@ -127,13 +129,13 @@
                         <input matInput type="number" [formControl]="quantityControl">
                     </mat-form-field>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" *ngIf="!isDisabled">
                     <mat-form-field appearance="outline">
                         <mat-label>Precio unitario</mat-label>
                         <input matInput type="number" [formControl]="cunitPriceControl">
                     </mat-form-field>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12" *ngIf="!isDisabled">
                     <mat-form-field appearance="outline">
                         <mat-label>Descripción</mat-label>
                         <input matInput type="text" [formControl]="descriptionControl">

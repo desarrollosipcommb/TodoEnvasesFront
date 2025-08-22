@@ -19,7 +19,7 @@ import Swal from 'sweetalert2';
 export class QuimicosComponent implements OnInit, OnDestroy {
 
   tituloTemple: string = '';
-  displayedColumns: string[] = ['nombre', 'descripcion', 'cantidad', 'precioUnitario', 'estado', 'editar', 'eliminar'];
+  displayedColumns: string[] = ['nombre', 'descripcion', 'cantidad', 'precioUnitario', 'estado', 'inventario', 'editar', 'eliminar'];
   dataSource: MatTableDataSource<QuimicoModel> = new MatTableDataSource<QuimicoModel>([]);
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -48,6 +48,9 @@ export class QuimicosComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   public buscarnombres: string = '';
+
+  public isActualizar: boolean = false;
+  public isDisabled: boolean = false;
 
   constructor(public modalservice: BsModalService,
     private quimicoService: QuimicoService,
@@ -126,20 +129,25 @@ export class QuimicosComponent implements OnInit, OnDestroy {
   openModal(template: TemplateRef<any>, quimicoModel: QuimicoModel | null, tipo: number): void {
     this.modalRef = this.modalservice.show(template, this.configs);
     this.limpiar();
+    this.isActualizar = true;
+    this.isDisabled = false;
     switch (tipo) {
       case 1:
         this.tituloTemple = 'Registro';
         this.btnConfirmar = 'Agregar';
+        this.isActualizar = false;
         break;
       case 2:
         this.tituloTemple = 'Actualización';
         this.btnConfirmar = 'Actualizar';
         this.idEnvase = quimicoModel?.id;
-        this.setDataForm(quimicoModel??new QuimicoModel());
+        this.setDataForm(quimicoModel ?? new QuimicoModel());
         break;
       case 3:
         this.tituloTemple = 'Añadir inventario';
         this.btnConfirmar = 'Agregar inventario';
+        this.isDisabled = true;
+        this.setDataFormInvetario(quimicoModel ?? new QuimicoModel());
         break;
     }
   }
@@ -158,6 +166,10 @@ export class QuimicosComponent implements OnInit, OnDestroy {
     this.cunitPriceControl.setValue(quimico.unitPrice);
   }
 
+  private setDataFormInvetario(quimico: QuimicoModel): void {
+    this.nameControl.setValue(quimico.name);
+  }
+
 
 
   /**
@@ -171,7 +183,7 @@ export class QuimicosComponent implements OnInit, OnDestroy {
       this.registrar();
     } else if (accion == 'Actualizar') {
       this.actualizar();
-    }else if (accion == 'Agregar inventario') {
+    } else if (accion == 'Agregar inventario') {
       this.registrarInventario();
     }
   }
@@ -186,6 +198,13 @@ export class QuimicosComponent implements OnInit, OnDestroy {
     quimico.description = this.descriptionControl.value;
     quimico.quantity = this.quantityControl.value;
     quimico.unitPrice = this.cunitPriceControl.value;
+    return quimico;
+  }
+
+  getDataInventario(): QuimicoModel {
+    const quimico: QuimicoModel = new QuimicoModel();
+    quimico.name = this.nameControl.value;
+    quimico.quantity = this.quantityControl.value;
     return quimico;
   }
 
@@ -216,7 +235,7 @@ export class QuimicosComponent implements OnInit, OnDestroy {
   */
   public registrarInventario(): void {
     this.botonDeshabilitado = true
-    this.quimicoService.añadirInventario(this.getData())
+    this.quimicoService.añadirInventario(this.getDataInventario())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {

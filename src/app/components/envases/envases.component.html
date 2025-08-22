@@ -137,7 +137,7 @@
                         <input matInput [formControl]="nombreControl" [readonly]="nameRequired">
                     </mat-form-field>
                 </div>
-                <div class="col-md-3" *ngIf="!isInventario">
+                <div class="col-md-6" *ngIf="!isInventario">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Diametro</mat-label>
                         <mat-select [formControl]="diametroControl">
@@ -147,10 +147,17 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Cantidad</mat-label>
                         <input matInput type="number" [formControl]="cantidadControl">
+                    </mat-form-field>
+                </div>
+                
+                <div class="col-md-6" *ngIf="!isInventario">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Unidades en paca</mat-label>
+                        <input matInput type="number" [formControl]="unidadPacaControl">
                     </mat-form-field>
                 </div>
                 <div class="col-md-3" *ngIf="!isInventario">
@@ -177,13 +184,7 @@
                         <input matInput type="number" [formControl]="pacaPrecioControl">
                     </mat-form-field>
                 </div>
-                <div class="col-md-4" *ngIf="!isInventario">
-                    <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Unidades en paca</mat-label>
-                        <input matInput type="number" [formControl]="unidadPacaControl">
-                    </mat-form-field>
-                </div>
-                <div class="col-md-8" *ngIf="!isInventario">
+                <div class="col-md-12" *ngIf="!isInventario">
                     <mat-form-field appearance="outline">
                         <mat-label>Descripción</mat-label>
                         <input matInput type="text" [formControl]="descripcionControl">
