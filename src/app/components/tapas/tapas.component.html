@@ -2,14 +2,28 @@
     <p>Lista de tapas</p>
     <br>
     <div class="row">
-        <div class="col-12 col-md-6 mb-3">
+        <div class="col-12 col-md-4 mb-3">
             <mat-form-field class="w-100" appearance="outline">
-                <mat-label>Buscar</mat-label>
+                <mat-label>Buscar nombre</mat-label>
                 <input matInput (keyup)="applyFilterNombres($event)" placeholder="Buscar por nombres" #input>
             </mat-form-field>
         </div>
 
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-3 mb-3">
+            <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Buscar color</mat-label>
+                <input matInput (keyup)="applyFilterColor($event)" placeholder="Buscar por color" #input>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-2 mb-3">
+            <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Buscar diámetro</mat-label>
+                <input matInput (keyup)="applyFilterDiametro($event)" placeholder="Buscar por diámetro" #input>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-2">
             <div class="row justify-content-start">
                 <div class="col-12 col-md-auto mb-2">
                     <button class="agregar mt-3" color="primary" mat-raised-button
@@ -20,7 +34,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="table-responsive">
             <table class="table">
@@ -130,16 +143,16 @@
         </div>
         <div class="container row">
             <div class="col-md-6">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Nombre</mat-label>
-                    <input matInput [formControl]="nombreControl" [readonly]="detailTapa || !inventory">
+                    <input matInput [formControl]="nombreControl" [readonly]="detailTapa || !inventory ||readEditar">
                 </mat-form-field>
             </div>
 
             <div class="col-md-6">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Color</mat-label>
-                    <input matInput [formControl]="colorControl" [readonly]="detailTapa  || !inventory">
+                    <input matInput [formControl]="colorControl" [readonly]="detailTapa  || !inventory || readEditar">
                 </mat-form-field>
             </div>
 
@@ -148,7 +161,7 @@
                     <mat-label>Diámetro</mat-label>
                     <mat-select [formControl]="diametroControl">
                         <mat-option *ngFor="let tipo of listaTipoEnvase" [value]="tipo.diameter"
-                            [disabled]="detailTapa || !inventory">
+                            [disabled]="detailTapa || !inventory || readEditar">
                             {{ tipo.diameter }}
                         </mat-option>
                     </mat-select>
@@ -161,25 +174,25 @@
                 </mat-form-field>
             </div>
             <div class="col-md-4" *ngIf="inventory">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Precio unidad</mat-label>
                     <input matInput type="number" [formControl]="unidadPrecioControl" [readonly]="detailTapa">
                 </mat-form-field>
             </div>
             <div class="col-md-4" *ngIf="inventory">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Precio docena</mat-label>
                     <input matInput type="number" [formControl]="docenaPrecioControl" [readonly]="detailTapa">
                 </mat-form-field>
             </div>
             <div class="col-md-4" *ngIf="inventory">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Precio por cien</mat-label>
                     <input matInput type="number" [formControl]="cienPrecioControl" [readonly]="detailTapa">
                 </mat-form-field>
             </div>
             <div class="col-md-4" *ngIf="inventory">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Precio paca</mat-label>
                     <input matInput type="number" [formControl]="pacaPrecioControl" [readonly]="detailTapa">
                 </mat-form-field>
@@ -188,6 +201,12 @@
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Unidades en paca</mat-label>
                     <input matInput type="number" [formControl]="unidadPacaControl" [readonly]="detailTapa">
+                </mat-form-field>
+            </div>
+            <div class="col-md-9" *ngIf="inventory">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Descripción</mat-label>
+                    <input matInput [formControl]="descripcionControl" [readonly]="detailTapa">
                 </mat-form-field>
             </div>
         </div>

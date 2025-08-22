@@ -71,6 +71,27 @@ export class TapaService {
   }
 
   /**
+ * Lista las tapas registrados por nombre
+ * @returns tapas[] lista de tapas
+ */
+  public listarByNameDiameterColor(
+    pageSize: number, pageNumber: number,
+    nombre: string, diametro: string,
+    color: string
+  ): Observable<EmployeeTable> {
+    let params = new HttpParams();
+    params = params.append('size', pageSize);
+    params = params.append('page', pageNumber);
+    if (nombre != null)
+      params = params.append('name', nombre);
+    if (diametro != null)
+      params = params.append('diameter', diametro);
+    if (color != null)
+      params = params.append('color', color);
+    return this.httpCliente.get<EmployeeTable>(this.url + 'by-name-diameter-color', { headers: cabecera, params: params })
+  }
+
+  /**
    * Lista las tapas registrados por nombre
    * @returns tapas[] lista de tapas
    */

@@ -28,6 +28,8 @@ export class TapasComponent implements OnInit, OnDestroy {
   page: number = 0;
   size: number = 5;
   buscarnombres: string;
+  buscarcolor: string;
+  buscardiametro: string;
   totalItems: number = 100;
   totalPages: number;
   currentPage: number;
@@ -42,6 +44,7 @@ export class TapasComponent implements OnInit, OnDestroy {
   btnConfirmar: string = '';
   idTapa: any;
   detailTapa: boolean = false
+  readEditar: boolean = false
   listaTipoEnvase: any
   inventory: boolean = true
   nombreControl = new FormControl('', [Validators.required]);
@@ -107,7 +110,10 @@ export class TapasComponent implements OnInit, OnDestroy {
   * 
   */
   private listar(): void {
-    this.tapaService.listarPagination(this.size, this.page)
+    this.tapaService.listarByNameDiameterColor(
+      this.size, this.page,
+      this.buscarnombres, this.buscardiametro,
+      this.buscarcolor)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: value => {
@@ -142,6 +148,21 @@ export class TapasComponent implements OnInit, OnDestroy {
     }
   }
 
+  applyFilterColor(event: Event) {
+    this.buscarcolor = (event.target as HTMLInputElement).value;
+    if (this.buscarcolor != null) {
+      this.listar();
+    }
+  }
+
+  applyFilterDiametro(event: Event) {
+    this.buscardiametro = (event.target as HTMLInputElement).value;
+    if (this.buscardiametro != null) {
+      this.listar();
+    }
+  }
+
+
   /*
   * Centra el modal
   */
@@ -175,11 +196,13 @@ export class TapasComponent implements OnInit, OnDestroy {
     this.inventory = true
     this.limpiar();
     if (!tapa) {
+      this.readEditar = false
       this.tituloTemple = 'Registro';
       this.btnConfirmar = 'Agregar';
     } else {
       this.tituloTemple = 'Actualización';
       this.btnConfirmar = 'Actualizar';
+      this.readEditar = true
       this.idTapa = tapa.id;
       this.setDataForm(tapa);
     }
@@ -187,6 +210,7 @@ export class TapasComponent implements OnInit, OnDestroy {
 
   private limpiar(): void {
     this.nombreControl.setValue(null);
+    this.descripcionControl.setValue(null)
     this.diametroControl.setValue(null)
     this.colorControl.setValue(null)
     this.cantidadControl.setValue(null)
@@ -207,6 +231,7 @@ export class TapasComponent implements OnInit, OnDestroy {
     this.cienPrecioControl.setValue(tapa.cienPrice)
     this.pacaPrecioControl.setValue(tapa.pacaPrice)
     this.unidadPacaControl.setValue(tapa.unitsInPaca)
+    this.descripcionControl.setValue(tapa.description)
   }
 
 
@@ -242,6 +267,7 @@ export class TapasComponent implements OnInit, OnDestroy {
     tapa.cienPrice = Number(this.cienPrecioControl.value)
     tapa.pacaPrice = Number(this.pacaPrecioControl.value)
     tapa.unitsInPaca = Number(this.unidadPacaControl.value)
+    tapa.description = String(this.descripcionControl.value)
 
     return tapa;
   }
@@ -362,7 +388,7 @@ export class TapasComponent implements OnInit, OnDestroy {
           this.alerta.success('Tapa activada', '');
           this.listar();
         }, error: err => {
-          this.alerta.error('No se pudo activar la tapa', '');
+          this.alerta.error('No se pudo activar la tapa', err.mensaje);
         }
       });
   }
