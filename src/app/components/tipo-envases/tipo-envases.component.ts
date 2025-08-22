@@ -19,14 +19,14 @@ import Swal from 'sweetalert2';
 export class TipoEnvasesComponent implements OnInit, OnDestroy {
 
   tituloTemple: string = ''
-  displayedColumns: string[] = ['nombre', 'diametro', 'estado', 'editar', 'eliminar'];
+  displayedColumns: string[] = ['nombre', 'diametro', 'description' , 'editar'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   //pagination rest api
   page: number = 0;
   size: number = 5;
-  buscarnombres: string;
+  buscarnombres: string = '';
   totalItems: number = 100;
   totalPages: number;
   currentPage: number;
@@ -46,6 +46,8 @@ export class TipoEnvasesComponent implements OnInit, OnDestroy {
 
   IsWait: boolean = false;
   botonDeshabilitado = false;
+
+  isActualizar: boolean = false;
 
   private destroy$: Subject<void> = new Subject<void>();
 
@@ -84,10 +86,10 @@ export class TipoEnvasesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: value => {
-          this.dataSource = new MatTableDataSource(value.data);
-          this.totalItems = value.totalItems;
+          this.dataSource = new MatTableDataSource(value.content);
+          this.totalItems = value.totalElements;
           this.totalPages = value.totalPages;
-          this.currentPage = value.currentPage;
+          this.currentPage = value.number;
         }
       })
   }
@@ -131,7 +133,6 @@ export class TipoEnvasesComponent implements OnInit, OnDestroy {
     } else {
       this.tituloTemple = 'Actualización';
       this.btnConfirmar = 'Actualizar';
-      this.idEnvase = tipoEnvase.id;
       this.setDataForm(tipoEnvase);
     }
   }
@@ -143,9 +144,11 @@ export class TipoEnvasesComponent implements OnInit, OnDestroy {
    *
    */
   tipoAccion(accion: string) {
+    this.isActualizar= false
     if (accion == 'Agregar') {
       this.registrar();
     } else if (accion == 'Actualizar') {
+      this.isActualizar = true;
       this.actualizar();
 
     }
@@ -201,7 +204,7 @@ export class TipoEnvasesComponent implements OnInit, OnDestroy {
    */
   actualizar() {
     this.botonDeshabilitado = true
-    this.tipoEnvaseService.actualizar(this.idEnvase, this.getData())
+    this.tipoEnvaseService.actualizar(this.getData())
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: next => {

@@ -7,10 +7,11 @@ import { Observable } from 'rxjs';
 
 
 export interface EmployeeTable {
-  data: TipoEnvaseModel[];
-  currentPage: number;
-  totalItems: number;
+  content: TipoEnvaseModel[];
+  number: number;
+  totalElements: number;
   totalPages: number;
+
 }
 
 let cabecera = new HttpHeaders();
@@ -33,9 +34,9 @@ export class TipoEnvaseService {
     let params = new HttpParams();
     params = params.append('size', pageSize);
     params = params.append('page', pageNumber);
-    if (nombre != null)
-      params = params.append('nombre', nombre);
-    return this.httpCliente.get<EmployeeTable>(this.url + 'all', { headers: cabecera, params: params })
+      params = params.append('name', nombre);
+      
+    return this.httpCliente.get<EmployeeTable>(this.url + 'like-name', { headers: cabecera, params: params })
   }
 
   public listarActivos(): Observable<any> {
@@ -57,8 +58,8 @@ export class TipoEnvaseService {
    * @param tipoEnvase
    * @returns Respuesta
    */
-  public actualizar(id: number, tipoEnvase: TipoEnvaseModel): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `update/${id}`, tipoEnvase);
+  public actualizar(tipoEnvase: TipoEnvaseModel): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `update`, tipoEnvase);
   }
 
   /**
