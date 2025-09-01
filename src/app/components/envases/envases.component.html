@@ -2,10 +2,16 @@
     <p>Lista de envases</p>
     <br>
     <div class="row">
-        <div class="col-12 col-md-6 mb-3">
+        <div class="col-12 col-md-5 mb-3">
             <mat-form-field class="w-100" appearance="outline">
-                <mat-label>Buscar</mat-label>
+                <mat-label>Buscar nombre</mat-label>
                 <input matInput (keyup)="applyFilterNombres($event)" placeholder="Buscar por nombres" #input>
+            </mat-form-field>
+        </div>
+        <div class="col-12 col-md-4 mb-3">
+            <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Buscar diámetro</mat-label>
+                <input matInput (keyup)="applyFilterDiametro($event)" placeholder="Buscar por nombres" #input>
             </mat-form-field>
         </div>
 

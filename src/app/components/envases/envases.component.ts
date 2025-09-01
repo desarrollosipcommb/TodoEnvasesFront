@@ -29,6 +29,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
   page: number = 0;
   size: number = 5;
   buscarnombres: string='';
+  buscarDiametro: string='';
   totalItems: number = 100;
   totalPages: number;
   currentPage: number;
@@ -115,11 +116,10 @@ export class EnvasesComponent implements OnInit, OnDestroy {
      * 
   */
   private listar(): void {
-    this.envaseService.listarPagination(this.size, this.page, this.buscarnombres)
+    this.envaseService.listarPagination(this.size, this.page, this.buscarnombres,this.buscarDiametro)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: value => {
-          console.log(value.content);
           this.dataSource = new MatTableDataSource(value.content);
           this.totalItems = value.totalElements;
           this.totalPages = value.totalPages;
@@ -146,6 +146,13 @@ export class EnvasesComponent implements OnInit, OnDestroy {
   applyFilterNombres(event: Event) {
     this.buscarnombres = (event.target as HTMLInputElement).value;
     if (this.buscarnombres != null) {
+      this.listar();
+    }
+  }
+
+  applyFilterDiametro(event: Event) {
+    this.buscarDiametro= (event.target as HTMLInputElement).value;
+    if (this.buscarDiametro!= null) {
       this.listar();
     }
   }
