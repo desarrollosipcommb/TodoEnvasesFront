@@ -4,7 +4,6 @@ import { LoginComponent } from './components/login/login.component';
 import { EmpleadosComponent } from './components/empleados/empleados.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { ErrorPermisoComponent } from './components/error-permiso/error-permiso.component';
-import { UsuarioTabletComponent } from './components/usuario-tablet/usuario-tablet.component';
 import { EnvasesComponent } from './components/envases/envases.component';
 import { TipoEnvasesComponent } from './components/tipo-envases/tipo-envases.component';
 import { CombosComponent } from './components/combos/combos.component';
@@ -15,7 +14,6 @@ const routes: Routes = [
 
   { path: '', component: LoginComponent },
   { path: 'empleado/listar', component: EmpleadosComponent },
-  { path: 'usuarios-tablet/listar', component: UsuarioTabletComponent },
   { path: 'combos/listar', component: CombosComponent },
   { path: 'quimicos/listar', component: QuimicosComponent },
   { path: 'tapas/listar', component: TapasComponent },

@@ -44,7 +44,6 @@ import {
 import { interceptorProvider } from './services/interceptor.service';
 import { LogsComponent } from './components/logs/logs.component';
 import { ErrorPermisoComponent } from './components/error-permiso/error-permiso.component';
-import { UsuarioTabletComponent } from './components/usuario-tablet/usuario-tablet.component';
 import { DatePipe } from '@angular/common';
 import { EnvasesComponent } from './components/envases/envases.component';
 import { TipoEnvasesComponent } from './components/tipo-envases/tipo-envases.component';
@@ -74,7 +73,6 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
     EmpleadosComponent,
     LogsComponent,
     ErrorPermisoComponent,
-    UsuarioTabletComponent,
     EnvasesComponent,
     TipoEnvasesComponent,
     QuimicosComponent,
