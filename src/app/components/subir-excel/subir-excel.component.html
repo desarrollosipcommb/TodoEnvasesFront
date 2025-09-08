@@ -1,0 +1,51 @@
+
+<div class="cont">
+  <p>Subir archivos</p>
+  <div class="col-12 col-md-2">
+    <div class="row justify-content-start">
+      <div class="col-12 col-md-auto mb-2">
+        <button class="agregar mt-3" color="primary" (click)="fileInput.click()">
+          <mat-icon>add</mat-icon>
+          <span>Seleccionar archivo</span>
+        </button>
+        <input #fileInput type="file" style="display: none;" (change)="onFileSelected($event)" />
+      </div>
+    </div>
+  </div>
+
+<div class="btn-group mb-3">
+  <button *ngFor="let tipo of tipos"
+          class="btn btn-outline-primary"
+          [class.active]="tipo === tipoSeleccionado"
+          (click)="setTipoSeleccionado(tipo)">
+    {{ tipo | titlecase }}
+  </button>
+</div>
+
+<div class="table-responsive">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <ng-container matColumnDef="fileName">
+      <th mat-header-cell *matHeaderCellDef>Archivo</th>
+      <td mat-cell *matCellDef="let element">{{ element.fileName }}</td>
+    </ng-container>
+    <ng-container matColumnDef="message">
+      <th mat-header-cell *matHeaderCellDef>Mensaje</th>
+      <td mat-cell *matCellDef="let element">{{ element.message }}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="2">No hay datos</td>
+    </tr>
+  </table>
+  <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+<ng-template #templateOn>
+
+</ng-template>
+
+<ng-template #templateLoading>
+
+</ng-template>

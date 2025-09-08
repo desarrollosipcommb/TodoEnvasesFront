@@ -9,6 +9,7 @@ import { TipoEnvasesComponent } from './components/tipo-envases/tipo-envases.com
 import { CombosComponent } from './components/combos/combos.component';
 import { QuimicosComponent } from './components/quimicos/quimicos.component';
 import { TapasComponent } from './components/tapas/tapas.component';
+import { SubirExcelComponent } from './components/subir-excel/subir-excel.component';
 
 const routes: Routes = [
 
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'tipos-envases/listar', component: TipoEnvasesComponent },
   { path: 'log/listar', component: LogsComponent },
   { path: 'error', component: ErrorPermisoComponent },
+  { path: 'subir-excel', component: SubirExcelComponent }
 
 ];
 
