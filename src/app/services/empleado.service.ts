@@ -5,32 +5,32 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
 export interface EmployeeTable {
-  data: EmpleadoModel[];
-  currentPage: number;
-  totalItems: number;
+  content: EmpleadoModel[];
+  number: number;
+  totalElements: number;
   totalPages: number;
 }
 
 let cabecera = new HttpHeaders();
-cabecera = cabecera.append('Content-Type', 'application/json');
+//cabecera = cabecera.append('Content-Type', 'application/json');
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpleadoService {
 
-  url = environment.baseUrl + 'empleado/';
+  url = environment.baseUrl + 'users/';
 
   constructor(private httpCliente: HttpClient) { }
 
   /**
-   * Utiliza el servicio para listar a empleados que no tengan 
+   * Utiliza el servicio para listar a empleados que no tengan
    * una programación asignada en un rango de fechas
-   * @param idCliente 
-   * @param fechaInicio 
-   * @param fechaFin 
-   * @param keyword 
-   * @returns 
+   * @param idCliente
+   * @param fechaInicio
+   * @param fechaFin
+   * @param keyword
+   * @returns
    */
   public listarEmpleadosSinProgramacion(
     fechaInicio: string,
@@ -50,7 +50,7 @@ export class EmpleadoService {
 
   /**
    * Retorna los empleados que tengan estado ACTIVO
-   * @returns 
+   * @returns
    */
   public listarActivos(): Observable<any> {
     return this.httpCliente.get<any>(this.url + 'listar/activos', { headers: cabecera })
@@ -77,10 +77,10 @@ export class EmpleadoService {
 
   /**
    * Cambia el estado de un empleado de activo a inactivo
-   * 
+   *
    * @param id del empleado a eliminar
    * @param idUsuario  del usuario que esta eliminao
-   * @returns 
+   * @returns
    */
   public eliminar(id: number): Observable<any> {
     return this.httpCliente.delete<any>(this.url + `delete/${id}`, { headers: cabecera })
@@ -100,14 +100,14 @@ export class EmpleadoService {
     if (empleado != null) { params = params.append('empleado', empleado); }
 
 
-    return this.httpCliente.get<EmployeeTable>(this.url + 'listar', { headers: cabecera, params: params })
+    return this.httpCliente.get<EmployeeTable>(this.url + 'all', { headers: cabecera, params: params })
   }
 
   /**
  * Cambia el estado de eliminado a activo
  * @param id del area
  * @param idUsuario id del usurio que realiza la operacion
- * @returns 
+ * @returns
  */
   public activar(id: number): Observable<any> {
     return this.httpCliente.put<any>(this.url + `activar/${id}`, {});

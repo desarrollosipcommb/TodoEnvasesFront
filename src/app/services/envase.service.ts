@@ -47,7 +47,7 @@ url = environment.baseUrl + 'jars/';
   }
 
    /**
-     * Permite añadir inventario a un envase existente en la base de datos. 
+     * Permite añadir inventario a un envase existente en la base de datos.
      * Solo necesita el numero a añadir y el nombre del envase. Si el envase no existe, lanzará un error.
      * Añade inventario a un envase
      * @param envase
@@ -59,7 +59,7 @@ url = environment.baseUrl + 'jars/';
 
   /**
    * crea un envase
-   * @param envase 
+   * @param envase
    * @returns mensaje si fue exitoso o error
    */
   public registrar(envase: EnvaseModel): Observable<any> {
@@ -77,7 +77,7 @@ url = environment.baseUrl + 'jars/';
   }
 
   /**
-   * 
+   *
    * @param id id del envase
    * @returns Response
    */

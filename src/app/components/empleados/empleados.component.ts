@@ -7,7 +7,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subject, take, takeUntil, tap } from 'rxjs';
 import { EmpleadoModel } from 'src/app/models/empleado-model';
 import { AlertaService } from 'src/app/services/alerta.service';
-import { EmpleadoService } from 'src/app/services/empleado.service';
+import { EmpleadoService, EmployeeTable } from 'src/app/services/empleado.service';
 import { RolService } from 'src/app/services/rol.service';
 import { TokenService } from 'src/app/services/token/token.service';
 import Swal from 'sweetalert2';
@@ -51,7 +51,7 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
   hide: boolean = true;
   hide2: boolean = true;
 
-  listaRoles: any;
+  //listaRoles: any;
   private destroy$: Subject<void> = new Subject<void>();
   IsWait: boolean = false;
   botonDeshabilitado = false;
@@ -69,7 +69,7 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
     this.verifyAdminRole();
     this.initForm();
     this.listar();
-    this.listarRoles();
+    //this.listarRoles();
   }
 
   ngOnDestroy(): void {
@@ -78,7 +78,7 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
   }
 
   private verifyAdminRole(): void {
-    if (!this.tokenservice.validarRol('Administrador') && !this.tokenservice.validarRol('JEFE')) {
+    if (!this.tokenservice.validarRol('admin') && !this.tokenservice.validarRol('JEFE')) {
       this.router.navigate(['/error']);
     }
   }
@@ -100,21 +100,39 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
     this.listar();
   }
 
-  private listar(): void {
-    this.empleadoService.listarPagination(this.page, this.size, this.buscarEmpleado)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: value => {
-          this.dataSource = new MatTableDataSource(value.data);
-          this.totalItems = value.totalItems;
-          this.totalPages = value.totalPages;
-          this.currentPage = value.currentPage;
-        },
-        error: err => {
-          this.alerta.error('Error al listar empleados', err.error.mensaje);
+private listar(): void {
+  this.empleadoService.listarPagination(this.page, this.size, this.buscarEmpleado)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (value: EmployeeTable) => {
+        const rawData = value.content;
+        if (!rawData) {
+          this.dataSource = new MatTableDataSource<EmpleadoModel>([]);
+          this.totalItems = 0;
+          return;
         }
-      });
-  }
+        const empleados: EmpleadoModel[] = rawData.map((item: any) => ({
+          fullname: item.fullName,
+          username: item.username,
+          email: item.email,
+          phone: item.phone,
+          roleName: item.roleName,
+          id: item.id,
+          estado: item.estado
+        }));
+        this.dataSource = new MatTableDataSource<EmpleadoModel>(empleados);
+        this.totalItems = value.totalElements;
+        this.totalPages = value.totalPages;
+        this.currentPage = value.number;
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
+      },
+      error: err => {
+        this.alerta.error('Error al listar empleados', err.error?.mensaje || 'Error desconocido');
+      }
+    });
+}
 
   handlePageEvent(e: PageEvent): void {
     this.pageEvent = e;
@@ -139,7 +157,6 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
     } else {
       this.tituloTemple = 'Actualización';
       this.btnConfirmar = 'Actualizar';
-      this.idEmpleado = empleado.id;
       this.setDataForm(empleado);
       this.disableFormControls();
     }
@@ -162,25 +179,23 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
 
   private setDataForm(empleado: EmpleadoModel): void {
     this.empleadoForm.patchValue({
-      nombreEmpleado: empleado.nombreEmpleado,
-      documento: empleado.identificacion,
-      correo: empleado.correo,
-      telefono: empleado.telefono,
-      nombreUsuario: empleado.nombreUsuario,
-      idRol: empleado.idRol
+      nombreEmpleado: empleado.fullname,
+      documento: empleado.username,
+      correo: empleado.email,
+      telefono: empleado.phone,
+      idRol: empleado.roleName
     });
   }
 
   private getDataForms(): EmpleadoModel {
     const empleado = new EmpleadoModel();
-    empleado.nombreEmpleado = this.empleadoForm.get('nombreEmpleado')?.value;
-    empleado.identificacion = this.empleadoForm.get('documento')?.value;
-    empleado.correo = this.empleadoForm.get('correo')?.value;
-    empleado.nombreUsuario = this.empleadoForm.get('nombreUsuario')?.value;
-    empleado.telefono = this.empleadoForm.get('telefono')?.value;
-    empleado.idRol = this.empleadoForm.get('idRol')?.value;
+    empleado.fullname = this.empleadoForm.get('nombreEmpleado')?.value;
+    empleado.username = this.empleadoForm.get('documento')?.value;
+    empleado.email = this.empleadoForm.get('correo')?.value;
+    empleado.phone = this.empleadoForm.get('telefono')?.value;
+    empleado.roleName = this.empleadoForm.get('idRol')?.value;
     if (this.empleadoForm.get('contrasena')?.value === this.empleadoForm.get('recontrasena')?.value) {
-      empleado.contrasena = this.empleadoForm.get('contrasena')?.value;
+      //empleado.contrasena = this.empleadoForm.get('contrasena')?.value;
     }
 
     return empleado;
@@ -192,7 +207,7 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
     if (this.validatePassword()) {
       const empleadoAct = this.getDataForms();
       if (!this.empleadoForm.get('contrasena')?.value) {
-        empleadoAct.contrasena = null;
+        //empleadoAct.contrasena = null;
       }
 
       this.empleadoService.actualizar(this.idEmpleado, empleadoAct)
@@ -299,7 +314,7 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+/*
   listarRoles(): void {
     this.rolService.listarActivos()
       .pipe(takeUntil(this.destroy$))
@@ -312,6 +327,7 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
         }
       });
   }
+      */
 
   openLoading(template: TemplateRef<any>): void {
     try {
