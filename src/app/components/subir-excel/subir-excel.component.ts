@@ -89,15 +89,15 @@ export class SubirExcelComponent {
       this.resultadosPorTipo[tipo] = [];
     }
     for (const item of response) {
-      if (item.message.includes('tapa')) {
+      if (item.message.toLowerCase().includes('tapa')) {
         this.resultadosPorTipo['tapas'].push(item);
-      } else if (item.message.includes('envase')) {
+      } else if (item.message.toLowerCase().includes('frasco')) {
         this.resultadosPorTipo['envases'].push(item);
-      } else if (item.message.includes('diametro')) {
+      } else if (item.message.toLowerCase().includes('diametro')) {
         this.resultadosPorTipo['diametros'].push(item);
-      } else if (item.message.includes('quimico')) {
+      } else if (item.message.toLowerCase().includes('quimico') || item.message.toLowerCase().includes('químico')) {
         this.resultadosPorTipo['quimicos'].push(item);
-      } else if (item.message.includes('extracto')) {
+      } else if (item.message.toLowerCase().includes('extracto')) {
         this.resultadosPorTipo['extracto'].push(item);
       }
     }
@@ -107,6 +107,14 @@ export class SubirExcelComponent {
 
 pageSize: number = 10;
 currentPage: number = 1;
+
+getRowClass(element: { message: string }) {
+  const msg = element.message.toLowerCase();
+  if (msg.toLowerCase().includes('error') && !msg.includes('ya existe')) return 'row-error';
+  if (msg.includes('ya existe')) return 'row-warning';
+  if (msg.includes('agregado')) return 'row-success';
+  return '';
+}
 
 get paginatedResultados() {
   const lista = this.resultadosPorTipo[this.tipoSeleccionado] ?? [];

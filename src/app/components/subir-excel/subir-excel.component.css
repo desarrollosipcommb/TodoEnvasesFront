@@ -89,3 +89,13 @@ mat-form-field {
 .cont {
   padding: 20px;
 }
+
+.row-error {
+  background-color: #ffdddd !important;
+}
+.row-warning {
+  background-color: #fff8e1 !important;
+}
+.row-success {
+  background-color: #e6ffe6 !important;
+}
