@@ -4,7 +4,7 @@
   <div class="row ">
     <div class="col-md-6">
       <mat-form-field appearance="outline">
-        <mat-label>Buscar por nombre o documento</mat-label>
+        <mat-label>Buscar por nombre</mat-label>
         <input matInput [formControl]="filtroEmpleadoControl" (keyup)="filtroNombre($event)" #input>
       </mat-form-field>
     </div>
@@ -30,17 +30,17 @@
                 <th mat-header-cell *matHeaderCellDef>Nombre </th>
                 <td mat-cell *matCellDef="let element"> {{element.fullname}}</td>
               </ng-container>
-              <ng-container matColumnDef="cedula">
-                <th mat-header-cell *matHeaderCellDef>Documento </th>
+              <ng-container matColumnDef="Nombre de Usuario">
+                <th mat-header-cell *matHeaderCellDef>Nombres de usuario </th>
                 <td mat-cell *matCellDef="let element"> {{element.username}}</td>
               </ng-container>
-              <ng-container matColumnDef="nombreUsuario">
-                <th mat-header-cell *matHeaderCellDef>Nombres usuario </th>
-                <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+              <ng-container matColumnDef="telefono">
+                <th mat-header-cell *matHeaderCellDef>telefono</th>
+                <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
               </ng-container>
               <ng-container matColumnDef="rol">
                 <th mat-header-cell *matHeaderCellDef>Rol</th>
-                <td mat-cell *matCellDef="let element"> {{element.roleName}} </td>
+                <td mat-cell *matCellDef="let element"> {{ manageRoles(element.roleName) }} </td>
               </ng-container>
               <ng-container matColumnDef="correo">
                 <th mat-header-cell *matHeaderCellDef>Correo </th>
@@ -60,12 +60,12 @@
               <ng-container matColumnDef="eliminar">
                 <th mat-header-cell *matHeaderCellDef>Eliminar/Activar</th>
                 <td mat-cell *matCellDef="let element">
-                  <button mat-icon-button color="warn" *ngIf="(element.estado!='ELIMINADO') "
-                    (click)="confirmar(element.id,'Eliminar')">
+                  <button mat-icon-button color="warn" *ngIf="(element.estado) "
+                    (click)="confirmar(element.username,'Eliminar')">
                     <mat-icon>delete</mat-icon>
                   </button>
-                  <button mat-icon-button *ngIf="(element.estado!='ACTIVO' ) "
-                    (click)="confirmar(element.id,'Activar')">
+                  <button mat-icon-button *ngIf="(!element.estado) "
+                    (click)="confirmar(element.username,'Activar')">
                     <mat-icon>check_circle</mat-icon>
                   </button>
                 </td>
@@ -78,10 +78,14 @@
               </tr>
             </table>
           </div>
-          <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="totalItems"
-            [pageSize]="size" [disabled]="disabled" [showFirstLastButtons]="showFirstLastButtons"
-            [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []" [hidePageSize]="hidePageSize"
-            [pageIndex]="page" aria-label="Select page">
+          <mat-paginator
+            #paginator
+            [length]="totalItems"
+            [pageSize]="size"
+            [pageIndex]="currentPage"
+            [pageSizeOptions]="pageSizeOptions"
+            [showFirstLastButtons]="showFirstLastButtons"
+            (page)="handlePageEvent($event)">
           </mat-paginator>
         </div>
       </table>
@@ -103,7 +107,7 @@
       <form [formGroup]="empleadoForm" class="row">
         <div class="col-md-12">
           <mat-form-field appearance="outline">
-            <mat-label>Nombre</mat-label>
+            <mat-label>Nombre. y apellido</mat-label>
             <input matInput formControlName="nombreEmpleado">
             <mat-error *ngIf="empleadoForm.get('nombreEmpleado')?.hasError('required')">
               Requerido
@@ -111,23 +115,23 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-12">
           <mat-form-field appearance="outline">
-            <mat-label>Identificación</mat-label>
-            <input matInput formControlName="documento" type="number">
-            <mat-error *ngIf="empleadoForm.get('documento')?.hasError('required')">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="idRol">
+              <mat-option [value]="'admin'">Administrador</mat-option>
+              <mat-option [value]="'seller'">Vendedor</mat-option>
+            </mat-select>
+            <mat-error *ngIf="empleadoForm.get('idRol')?.hasError('required')">
               Requerido
             </mat-error>
           </mat-form-field>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-12" *ngIf="btnConfirmar === 'Agregar'">
           <mat-form-field appearance="outline">
-            <mat-label>Nombre Usuario</mat-label>
-            <input matInput formControlName="nombreUsuario">
-            <mat-error *ngIf="empleadoForm.get('nombreUsuario')?.hasError('required')">
-              Requerido
-            </mat-error>
+            <mat-label>Nombre de usuario</mat-label>
+            <input matInput formControlName="username">
           </mat-form-field>
         </div>
 
@@ -154,7 +158,7 @@
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6" *ngIf="btnConfirmar === 'Agregar'">
           <mat-form-field appearance="outline">
             <mat-label>Contraseña</mat-label>
             <input [type]="hide ? 'password' : 'text'" matInput formControlName="contrasena">
@@ -172,7 +176,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6" *ngIf="btnConfirmar === 'Agregar'">
           <mat-form-field appearance="outline">
             <mat-label>Repetir Contraseña</mat-label>
             <input [type]="hide2 ? 'password' : 'text'" matInput formControlName="recontrasena">

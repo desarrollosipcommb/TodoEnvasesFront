@@ -5,4 +5,5 @@ export class EmpleadoModel {
     email: string | null;
     phone: string | null;
     roleName: any;
+    estado: boolean;
 }

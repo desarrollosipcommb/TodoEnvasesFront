@@ -19,7 +19,7 @@ import Swal from 'sweetalert2';
 })
 export class EmpleadosComponent implements OnInit, OnDestroy {
   titulo: string = 'Lista de empleados';
-  displayedColumns: string[] = ['nombre', 'cedula', 'nombreUsuario', 'rol', 'correo', 'actualizar', 'eliminar'];
+  displayedColumns: string[] = ['nombre', 'Nombre de Usuario', 'telefono', 'rol', 'correo', 'actualizar', 'eliminar'];
   dataSource: MatTableDataSource<EmpleadoModel>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -89,7 +89,7 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
       documento: new FormControl('', [Validators.required]),
       correo: new FormControl('', [Validators.required, Validators.email]),
       telefono: new FormControl('', [Validators.required]),
-      nombreUsuario: new FormControl('', [Validators.required]),
+      username: new FormControl('', [Validators.required]),
       contrasena: new FormControl('', [Validators.required, Validators.minLength(6)]),
       recontrasena: new FormControl('', [Validators.required, Validators.minLength(6)]),
       idRol: new FormControl(null, Validators.required)
@@ -100,43 +100,52 @@ export class EmpleadosComponent implements OnInit, OnDestroy {
     this.listar();
   }
 
-private listar(): void {
-  this.empleadoService.listarPagination(this.page, this.size, this.buscarEmpleado)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (value: EmployeeTable) => {
-        const rawData = value.content;
-        if (!rawData) {
-          this.dataSource = new MatTableDataSource<EmpleadoModel>([]);
-          this.totalItems = 0;
-          return;
+  private listar(): void {
+    this.empleadoService.listarPagination(this.page, this.size, this.buscarEmpleado)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (value: EmployeeTable) => {
+          console.log(value);
+          const rawData = value.content;
+          if (!rawData) {
+            this.dataSource = new MatTableDataSource<EmpleadoModel>([]);
+            this.totalItems = 0;
+            return;
+          }
+          const empleados: EmpleadoModel[] = rawData.map((item: any) => ({
+            fullname: item.fullName,
+            username: item.username,
+            email: item.email,
+            phone: item.phone,
+            roleName: item.roleName,
+            id: item.id,
+            estado: item.isActive
+          }));
+          this.dataSource = new MatTableDataSource<EmpleadoModel>(empleados);
+          this.totalItems = value.totalElements;
+          this.totalPages = value.totalPages;
+          this.currentPage = value.number; // <-- importante
+        },
+        error: err => {
+          this.alerta.error('Error al listar empleados', err.error?.mensaje || 'Error desconocido');
         }
-        const empleados: EmpleadoModel[] = rawData.map((item: any) => ({
-          fullname: item.fullName,
-          username: item.username,
-          email: item.email,
-          phone: item.phone,
-          roleName: item.roleName,
-          id: item.id,
-          estado: item.estado
-        }));
-        this.dataSource = new MatTableDataSource<EmpleadoModel>(empleados);
-        this.totalItems = value.totalElements;
-        this.totalPages = value.totalPages;
-        this.currentPage = value.number;
-        if (this.paginator) {
-          this.dataSource.paginator = this.paginator;
-        }
-      },
-      error: err => {
-        this.alerta.error('Error al listar empleados', err.error?.mensaje || 'Error desconocido');
-      }
-    });
-}
+      });
+  }
+
+  manageRoles(rol: string): string {
+    switch (rol) {
+      case 'admin':
+        return 'Administrador';
+      case 'seller':
+        return 'Vendedor';
+      default:
+        return 'Desconocido';
+    }
+  }
+
+
 
   handlePageEvent(e: PageEvent): void {
-    this.pageEvent = e;
-    this.totalItems = e.length;
     this.size = e.pageSize;
     this.page = e.pageIndex;
     this.listar();
@@ -180,7 +189,7 @@ private listar(): void {
   private setDataForm(empleado: EmpleadoModel): void {
     this.empleadoForm.patchValue({
       nombreEmpleado: empleado.fullname,
-      documento: empleado.username,
+      username: empleado.username,
       correo: empleado.email,
       telefono: empleado.phone,
       idRol: empleado.roleName
@@ -190,7 +199,7 @@ private listar(): void {
   private getDataForms(): EmpleadoModel {
     const empleado = new EmpleadoModel();
     empleado.fullname = this.empleadoForm.get('nombreEmpleado')?.value;
-    empleado.username = this.empleadoForm.get('documento')?.value;
+    empleado.username = this.empleadoForm.get('username')?.value;
     empleado.email = this.empleadoForm.get('correo')?.value;
     empleado.phone = this.empleadoForm.get('telefono')?.value;
     empleado.roleName = this.empleadoForm.get('idRol')?.value;
@@ -205,12 +214,13 @@ private listar(): void {
     this.botonDeshabilitado = true;
 
     if (this.validatePassword()) {
-      const empleadoAct = this.getDataForms();
+      const empleadoAct = this.getDataFormsForUpdate();
       if (!this.empleadoForm.get('contrasena')?.value) {
         //empleadoAct.contrasena = null;
       }
 
-      this.empleadoService.actualizar(this.idEmpleado, empleadoAct)
+      console.log(empleadoAct);
+      this.empleadoService.actualizar(empleadoAct)
         .pipe(
           takeUntil(this.destroy$),
           tap(() => this.botonDeshabilitado = false)
@@ -245,29 +255,60 @@ private listar(): void {
   }
 
   registar(): void {
-    this.botonDeshabilitado = true;
-
-    if (this.validatePassword()) {
-      this.empleadoService.registrar(this.getDataForms())
-        .pipe(
-          takeUntil(this.destroy$),
-          tap(() => this.botonDeshabilitado = false)
-        )
-        .subscribe({
-          next: () => {
-            this.alerta.success('Registro exitoso', '');
-            this.modalRef.hide();
-            this.listar();
-            this.limpiar();
-          },
-          error: err => {
-            this.alerta.error(err.error.mensaje, '');
-          }
-        });
+  this.botonDeshabilitado = true;
+  if (this.validatePassword()) {
+    const empleadoTransformado = this.getDataFormsForRegister();
+    this.empleadoService.registrar(empleadoTransformado)
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => this.botonDeshabilitado = false)
+      )
+      .subscribe({
+        next: () => {
+          this.alerta.success('Registro exitoso', '');
+          this.modalRef.hide();
+          this.listar();
+          this.limpiar();
+        },
+        error: err => {
+          this.alerta.error(err.error.mensaje, '');
+        }
+      });
     }
   }
 
-  confirmar(id: number, tipo: string): void {
+  private getDataFormsForUpdate(): any {
+    const nombreCompleto = this.empleadoForm.get('nombreEmpleado')?.value || '';
+    const [firstName, ...rest] = nombreCompleto.split(' ');
+    const lastName = rest.join(' ');
+    return {
+      username: this.empleadoForm.get('username')?.value,
+      email: this.empleadoForm.get('correo')?.value,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: this.empleadoForm.get('telefono')?.value,
+      roleName: this.empleadoForm.get('idRol')?.value,
+      password: null
+    };
+  }
+
+  private getDataFormsForRegister(): any {
+    const nombreCompleto = this.empleadoForm.get('nombreEmpleado')?.value || '';
+    const [firstName, ...rest] = nombreCompleto.split(' ');
+    const lastName = rest.join(' ');
+    console.log(this.empleadoForm.get('idRol')?.value);
+    return {
+      username: this.empleadoForm.get('username')?.value,
+      email: this.empleadoForm.get('correo')?.value,
+      password: this.empleadoForm.get('contrasena')?.value,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: this.empleadoForm.get('telefono')?.value,
+      roleName: this.empleadoForm.get('idRol')?.value
+    };
+  }
+
+  confirmar(id: string, tipo: string): void {
     Swal.fire({
       title: '¿Está seguro?',
       icon: 'warning',
@@ -287,22 +328,22 @@ private listar(): void {
     });
   }
 
-  eliminar(id: number): void {
-    this.empleadoService.eliminar(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          this.alerta.success('Empleado eliminado', '');
-          this.listar();
-        },
-        error: err => {
-          this.alerta.error('No se pudo eliminar el empleado', err.error.mensaje);
-        }
-      });
-  }
+eliminar(username: string): void {
+  this.empleadoService.eliminar(username)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: () => {
+        this.alerta.success('Empleado eliminado', '');
+        this.listar();
+      },
+      error: err => {
+        this.alerta.error('No se pudo eliminar el empleado', err.error.mensaje);
+      }
+    });
+}
 
-  activarEmpleado(id: number): void {
-    this.empleadoService.activar(id)
+  activarEmpleado(username: string): void {
+    this.empleadoService.activar(username)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -314,20 +355,6 @@ private listar(): void {
         }
       });
   }
-/*
-  listarRoles(): void {
-    this.rolService.listarActivos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: data => {
-          this.listaRoles = data;
-        },
-        error: err => {
-          this.alerta.error('Error al listar roles', err.error.mensaje);
-        }
-      });
-  }
-      */
 
   openLoading(template: TemplateRef<any>): void {
     try {

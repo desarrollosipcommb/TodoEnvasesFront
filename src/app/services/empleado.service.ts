@@ -62,7 +62,14 @@ export class EmpleadoService {
   * @returns el empleado creado si fue exitoso
   */
   public registrar(empleado: EmpleadoModel): Observable<any> {
-    return this.httpCliente.post<any>(this.url + 'crear', empleado, { headers: cabecera })
+    console.log(empleado);
+
+    if(empleado.roleName ==='admin'){
+      return this.httpCliente.post<any>(this.url + 'register-admin', empleado);
+    }else{
+      return this.httpCliente.post<any>(this.url + 'register', empleado);
+    }
+
   }
 
   /**
@@ -71,8 +78,8 @@ export class EmpleadoService {
    * @param empleado
    * @returns
    */
-  public actualizar(id: number, empleado: EmpleadoModel): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `actualizar/${id}`, empleado, { headers: cabecera })
+  public actualizar(empleado: EmpleadoModel): Observable<any> {
+    return this.httpCliente.put<any>(this.url + 'update', empleado)
   }
 
   /**
@@ -82,9 +89,10 @@ export class EmpleadoService {
    * @param idUsuario  del usuario que esta eliminao
    * @returns
    */
-  public eliminar(id: number): Observable<any> {
-    return this.httpCliente.delete<any>(this.url + `delete/${id}`, { headers: cabecera })
-  }
+public eliminar(username: string): Observable<any> {
+  let params = new HttpParams().set('username', username);
+  return this.httpCliente.put<any>(this.url + 'delete', {}, { headers: cabecera, params });
+}
 
 
 
@@ -92,15 +100,14 @@ export class EmpleadoService {
   * lIsta los empleados registrado
   * @returns Usurios[] lista de empleados
   */
-  public listarPagination(pageNumber: number, pageSize: number, empleado: string): Observable<EmployeeTable> {
+  public listarPagination(pageNumber: number, pageSize: number, name: string): Observable<EmployeeTable> {
     let params = new HttpParams();
     params = params.append('page', pageNumber);
     params = params.append('size', pageSize);
 
-    if (empleado != null) { params = params.append('empleado', empleado); }
+    if (name != null) { params = params.append('name', name); }
 
-
-    return this.httpCliente.get<EmployeeTable>(this.url + 'all', { headers: cabecera, params: params })
+    return this.httpCliente.get<EmployeeTable>(this.url + 'by-name', { headers: cabecera, params: params })
   }
 
   /**
@@ -109,8 +116,9 @@ export class EmpleadoService {
  * @param idUsuario id del usurio que realiza la operacion
  * @returns
  */
-  public activar(id: number): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `activar/${id}`, {});
+  public activar(username: string): Observable<any> {
+    let params = new HttpParams().set('username', username);
+    return this.httpCliente.put<any>(this.url + 'activte', {}, { headers: cabecera, params });
   }
 
   buscarEmpleados(keyword: string): Observable<any> {
