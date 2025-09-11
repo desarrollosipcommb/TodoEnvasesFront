@@ -4,7 +4,7 @@
   <div class="col-12 col-md-2">
     <div class="row justify-content-start">
       <div class="col-12 col-md-auto mb-2">
-        <button class="agregar mt-3" color="primary" (click)="fileInput.click()">
+        <button mat-raised-button class="agregar mt-3" color="primary" (click)="fileInput.click()">
           <mat-icon>add</mat-icon>
           <span>Seleccionar archivo</span>
         </button>
@@ -13,13 +13,31 @@
     </div>
   </div>
 
-<div class="btn-group mb-3">
-  <button *ngFor="let tipo of tipos"
-          class="btn btn-outline-primary"
-          [class.active]="tipo === tipoSeleccionado"
-          (click)="setTipoSeleccionado(tipo)">
-    {{ tipo | titlecase }}
-  </button>
+<div class="mb-3 d-flex align-items-center gap-4 flex-row">
+  <!-- Botones -->
+  <div class="btn-group">
+    <button *ngFor="let tipo of tipos"
+            class="btn btn-outline-primary"
+            [class.active]="tipo === tipoSeleccionado"
+            (click)="setTipoSeleccionado(tipo)">
+      {{ tipo | titlecase }}
+    </button>
+  </div>
+  <!-- Leyenda de colores -->
+  <div class="d-flex align-items-center gap-3 flex-row">
+    <span class="d-flex align-items-center">
+      <span style="display:inline-block;width:16px;height:16px;background:#fff3cd;border:1px solid #ffe066;margin-right:6px;"></span>
+      <small>Amarillo: producto ya existe</small>
+    </span>
+    <span class="d-flex align-items-center">
+      <span style="display:inline-block;width:16px;height:16px;background:#f8d7da;border:1px solid #f44336;margin-right:6px;"></span>
+      <small>Rojo: error</small>
+    </span>
+    <span class="d-flex align-items-center">
+      <span style="display:inline-block;width:16px;height:16px;background:#d4edda;border:1px solid #28a745;margin-right:6px;"></span>
+      <small>Verde: agregado correctamente</small>
+    </span>
+  </div>
 </div>
 
 <div class="table-responsive">
