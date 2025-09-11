@@ -117,14 +117,19 @@ export class TapasComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: value => {
-          console.log(value.content)
           this.dataSource = new MatTableDataSource(value.content);
-          this.totalItems = value.totalItems;
+          this.totalItems = value.totalElements;
           this.totalPages = value.totalPages;
-          this.currentPage = value.currentPage;
+          this.currentPage = value.number;
         }
       })
   }
+
+
+  public getEstado(estado: boolean): string {
+    return estado ? 'Activo' : 'Inactivo';
+  }
+
   /**
    * Obtiene los cambios realizados por el usuario en la pagination en la tabla
    * @param e PageEvent

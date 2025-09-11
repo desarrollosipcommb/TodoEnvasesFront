@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
 
 export interface EmployeeTable {
   content: TapaModel[];
-  currentPage: number;
-  totalItems: number;
+  number: number;
+  totalElements: number;
   totalPages: number;
 }
 
@@ -74,6 +74,7 @@ export class TapaService {
  * Lista las tapas registrados por nombre
  * @returns tapas[] lista de tapas
  */
+
   public listarByNameDiameterColor(
     pageSize: number, pageNumber: number,
     nombre: string, diametro: string,
