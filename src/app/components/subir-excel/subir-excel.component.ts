@@ -52,6 +52,7 @@ export class SubirExcelComponent {
     } else {
       alert("Por favor, selecciona solo un archivo del tipo .xls o .xlsx.");
     }
+    input.value = ''; // Limpiar el input para permitir subir el mismo archivo nuevamente
   }
 
   revisarArchivo(file: File) {
@@ -91,7 +92,7 @@ export class SubirExcelComponent {
     for (const item of response) {
       if (item.message.toLowerCase().includes('tapa')) {
         this.resultadosPorTipo['tapas'].push(item);
-      } else if (item.message.toLowerCase().includes('frasco')) {
+      } else if (item.message.toLowerCase().includes('envase')) {
         this.resultadosPorTipo['envases'].push(item);
       } else if (item.message.toLowerCase().includes('diametro')) {
         this.resultadosPorTipo['diametros'].push(item);
