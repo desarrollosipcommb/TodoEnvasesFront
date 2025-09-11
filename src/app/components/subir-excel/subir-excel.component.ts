@@ -52,6 +52,7 @@ export class SubirExcelComponent {
     } else {
       alert("Por favor, selecciona solo un archivo del tipo .xls o .xlsx.");
     }
+    input.value = ''; // Limpiar el input para permitir subir el mismo archivo nuevamente
   }
 
   revisarArchivo(file: File) {
