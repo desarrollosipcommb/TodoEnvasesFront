@@ -1,0 +1,83 @@
+<div class="cont">
+  <p>Lista de transacciones</p>
+  <br>
+  <div class="row">
+    <div class="col-12 col-md-4 mb-3">
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Buscar</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Buscar transacción" #input>
+      </mat-form-field>
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Tipo de Ítem</mat-label>
+        <mat-select [(value)]="selectedItemType" (selectionChange)="listar()">
+          <mat-option value="">Todos</mat-option>
+          <mat-option value="CAP">Tapa</mat-option>
+          <mat-option value="JAR">Envase</mat-option>
+          <mat-option value="QUIMICO">Químico</mat-option>
+          <mat-option value="EXTRACTO">Extracto</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-12 col-md-4 mb-3">
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Tipo de Transacción</mat-label>
+        <mat-select [(value)]="selectedTransactionType" (selectionChange)="listar()">
+          <mat-option value="">Todos</mat-option>
+          <mat-option value="restock">Reabastecimiento</mat-option>
+          <mat-option value="adjustment">Ajuste</mat-option>
+          <mat-option value="sale">Venta</mat-option>
+          <mat-option value="damage">Daños</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+<div class="table-responsive">
+  <table class="table">
+    <div class="card">
+      <div>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+          <ng-container matColumnDef="itemType">
+            <th mat-header-cell *matHeaderCellDef>Tipo de Ítem</th>
+            <td mat-cell *matCellDef="let element">{{ element.itemType | ItemTypeLabel }}</td>
+          </ng-container>
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+            <td mat-cell *matCellDef="let element">{{ element.quantity }}</td>
+          </ng-container>
+          <ng-container matColumnDef="transactionType">
+            <th mat-header-cell *matHeaderCellDef>Tipo de Transacción</th>
+            <td mat-cell *matCellDef="let element">{{ element.transactionType | transactionTypeLabel}}</td>
+          </ng-container>
+          <ng-container matColumnDef="notes">
+            <th mat-header-cell *matHeaderCellDef>Notas</th>
+            <td mat-cell *matCellDef="let element">{{ element.notes }}</td>
+          </ng-container>
+          <ng-container matColumnDef="transactionDate">
+            <th mat-header-cell *matHeaderCellDef>Fecha</th>
+            <td mat-cell *matCellDef="let element">{{ element.transactionDate | date:'short' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="userName">
+            <th mat-header-cell *matHeaderCellDef>Usuario</th>
+            <td mat-cell *matCellDef="let element">{{ element.userName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="userEmail">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let element">{{ element.userEmail }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="7">No hay datos</td>
+          </tr>
+        </table>
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="totalItems"
+          [pageSize]="size" [disabled]="disabled" [showFirstLastButtons]="showFirstLastButtons"
+          [pageSizeOptions]="pageSizeOptions" [pageIndex]="page" aria-label="Select page">
+        </mat-paginator>
+      </div>
+    </div>
+  </table>
+</div>
