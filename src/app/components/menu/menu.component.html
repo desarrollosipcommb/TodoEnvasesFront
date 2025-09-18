@@ -37,6 +37,11 @@
       <span>Empleados</span>
     </button>
 
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/tipos-envases/listar">
+      <mat-icon>playlist_add_check</mat-icon>
+      <span>Tipos de envases</span>
+    </button>
+
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/envase/listar">
       <mat-icon>playlist_add_check</mat-icon>
       <span>Envases</span>
@@ -47,25 +52,29 @@
       <span>Tapas</span>
     </button>
 
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/quimicos/listar">
-      <mat-icon>playlist_add_check</mat-icon>
-      <span>Quimicos</span>
-    </button>
-
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/combos/listar">
       <mat-icon>playlist_add_check</mat-icon>
       <span>Combos</span>
     </button>
 
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/tipos-envases/listar">
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/quimicos/listar">
       <mat-icon>playlist_add_check</mat-icon>
-      <span>Tipos de envases</span>
+      <span>Quimicos</span>
     </button>
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/extractos">
+      <mat-icon>playlist_add_check</mat-icon>
+      <span>Extractos</span>
+    </button>
+
 
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/subir-excel">
       <mat-icon>playlist_add_check</mat-icon>
       <span>Subir Excel</span>
     </button>
+
+
+
 
 
     <mat-divider></mat-divider>
