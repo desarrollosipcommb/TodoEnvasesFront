@@ -54,6 +54,9 @@ import { VentasComponent } from './components/ventas/ventas.component';
 import { SubirExcelComponent } from './components/subir-excel/subir-excel.component';
 import { CompatibilidadesComponent } from './components/compatibilidades/compatibilidades.component';
 import { ExtractosComponent } from './components/extractos/extractos.component';
+import { TransaccionesComponent } from './components/transacciones/transacciones.component';
+import { ItemTypeLabel } from './pipes/transactions.pipe';
+import { transactionTypeLabel } from './pipes/transactions.pipe';
 
 
 
@@ -85,6 +88,9 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
     SubirExcelComponent,
     CompatibilidadesComponent,
     ExtractosComponent,
+    TransaccionesComponent,
+    ItemTypeLabel,
+    transactionTypeLabel
   ],
   imports: [
     HttpClientModule,

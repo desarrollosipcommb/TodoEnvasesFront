@@ -73,7 +73,6 @@ export class ExtractosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: value => {
-          console.log(value);
           this.dataSource = new MatTableDataSource(value.content);
           this.totalItems = value.totalElements;
           this.totalPages = value.totalPages;
