@@ -10,4 +10,5 @@ export class TapaModel {
     cienPrice: number
     pacaPrice: number
     unitsInPaca: number
+    checked: boolean
 }

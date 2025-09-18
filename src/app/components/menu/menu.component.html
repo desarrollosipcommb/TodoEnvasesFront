@@ -26,34 +26,25 @@
   <mat-drawer #sidenav="matDrawer" class="toolbar" *ngIf="config.islogged">
     <img class="avatar " src="./assets/logo.png" />
     <mat-divider></mat-divider>
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/programacion/listar"
-      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
-      <mat-icon>list</mat-icon>
-      <span>Lista programaciones</span>
-    </button>
 
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/empleado/listar">
-      <mat-icon>playlist_add_check</mat-icon>
-      <span>Empleados</span>
-    </button>
 
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/envase/listar">
-      <mat-icon>playlist_add_check</mat-icon>
+      <mat-icon>science</mat-icon>
       <span>Envases</span>
     </button>
 
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/tapas/listar">
-      <mat-icon>playlist_add_check</mat-icon>
+      <mat-icon>album</mat-icon>
       <span>Tapas</span>
     </button>
 
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/quimicos/listar">
-      <mat-icon>playlist_add_check</mat-icon>
+      <mat-icon>medication_liquid</mat-icon>
       <span>Quimicos</span>
     </button>
 
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/combos/listar">
-      <mat-icon>playlist_add_check</mat-icon>
+      <mat-icon>all_inclusive</mat-icon>
       <span>Combos</span>
     </button>
 
@@ -62,24 +53,23 @@
       <span>Tipos de envases</span>
     </button>
 
+
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/compatibles">
+      <mat-icon>sync_alt</mat-icon>
+      <span>Compatibilidad</span>
+    </button>
+
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/subir-excel">
-      <mat-icon>playlist_add_check</mat-icon>
+      <mat-icon>widgets</mat-icon>
       <span>Subir Excel</span>
     </button>
 
 
     <mat-divider></mat-divider>
 
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/empleado/listar"
-      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
-      <mat-icon>group</mat-icon>
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/empleado/listar">
+      <mat-icon>accessibility</mat-icon>
       <span>Empleados</span>
-    </button>
-
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/usuarios-tablet/listar"
-      *ngIf="tokenService.validarRol('Administrador')||tokenService.validarRol('JEFE')">
-      <mat-icon>person</mat-icon>
-      <span>Usuarios Tablet</span>
     </button>
 
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="log/listar"

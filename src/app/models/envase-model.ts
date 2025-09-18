@@ -1,3 +1,5 @@
+import { TapaModel } from "./tapa-model"
+
 export class EnvaseModel {
     id: number
     name: string
@@ -9,6 +11,6 @@ export class EnvaseModel {
     cienPrice: number
     pacaPrice: number
     unitsInPaca: number
-    compatibleCaps: any
-    unCompatibleCaps: any
+    compatibleCaps: TapaModel
+    unCompatibleCaps: TapaModel
 }

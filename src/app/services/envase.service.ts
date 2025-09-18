@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
 
 export interface EmployeeTable {
   content: EnvaseModel[]
-   number: number;
-   totalElements: number;
-   totalPages: number;
+  number: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 let cabecera = new HttpHeaders();
@@ -19,7 +19,7 @@ let cabecera = new HttpHeaders();
   providedIn: 'root'
 })
 export class EnvaseService {
-url = environment.baseUrl + 'jars/';
+  url = environment.baseUrl + 'jars/';
 
   constructor(private httpCliente: HttpClient) { }
 
@@ -27,15 +27,15 @@ url = environment.baseUrl + 'jars/';
     * Lista los envases registradas
     * @returns Envases[] lista de envases
     */
-  public listarPagination(pageSize: number, pageNumber: number, nombre: string,diametro:string): Observable<EmployeeTable> {
+  public listarPagination(pageSize: number, pageNumber: number, nombre: string, diametro: string): Observable<EmployeeTable> {
     let params = new HttpParams();
     let header = new HttpHeaders();
     params = params.append('size', pageSize);
     params = params.append('page', pageNumber);
-    if(nombre && nombre.length > 0){
+    if (nombre && nombre.length > 0) {
       params = params.append('name', nombre);
     }
-    if(diametro && diametro.length > 0){
+    if (diametro && diametro.length > 0) {
       params = params.append('diameter', diametro);
     }
 
@@ -46,16 +46,16 @@ url = environment.baseUrl + 'jars/';
     return this.httpCliente.get<any>(this.url + 'all/active', { headers: cabecera })
   }
 
-   /**
-     * Permite añadir inventario a un envase existente en la base de datos.
-     * Solo necesita el numero a añadir y el nombre del envase. Si el envase no existe, lanzará un error.
-     * Añade inventario a un envase
-     * @param envase
-     * @returns Respuesta
-     */
-    public añadirInventario(envase:EnvaseModel): Observable<any> {
-      return this.httpCliente.put<any>(this.url + `inventory`, envase);
-    }
+  /**
+    * Permite añadir inventario a un envase existente en la base de datos.
+    * Solo necesita el numero a añadir y el nombre del envase. Si el envase no existe, lanzará un error.
+    * Añade inventario a un envase
+    * @param envase
+    * @returns Respuesta
+    */
+  public añadirInventario(envase: EnvaseModel): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `inventory`, envase);
+  }
 
   /**
    * crea un envase
@@ -72,7 +72,7 @@ url = environment.baseUrl + 'jars/';
    * @param envase
    * @returns Respuesta
    */
-  public actualizar( envase: EnvaseModel): Observable<any> {
+  public actualizar(envase: EnvaseModel): Observable<any> {
     return this.httpCliente.put<any>(this.url + `update`, envase);
   }
 
@@ -81,8 +81,8 @@ url = environment.baseUrl + 'jars/';
    * @param id id del envase
    * @returns Response
    */
-  public activar(nameEnvase:string): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `activate`,nameEnvase, {});
+  public activar(nameEnvase: string): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `activate`, nameEnvase, {});
   }
 
   /**
@@ -90,7 +90,39 @@ url = environment.baseUrl + 'jars/';
     * @param id del area
     * @returns
     */
-  public eliminar(nameEnvase:string): Observable<any> {
-    return this.httpCliente.put<any>(this.url + `delete/`,nameEnvase, { headers: cabecera })
+  public eliminar(nameEnvase: string): Observable<any> {
+    return this.httpCliente.put<any>(this.url + `delete/`, nameEnvase, { headers: cabecera })
+  }
+
+  /**
+  * Lista los envases registradas
+  * @returns Envases[] lista de envases
+  */
+  public listarTapasCompatibles(nombre: string): Observable<EmployeeTable> {
+    let params = new HttpParams();
+    if (nombre && nombre.length > 0) {
+      params = params.append('jarName', nombre);
+    }
+
+    return this.httpCliente.get<EmployeeTable>(this.url + 'compatible-caps', { headers: cabecera, params: params })
+  }
+
+  /**
+  * Lista de tapas incompatibles 
+  * @returns Tapas[] lista de tapas incompatibles
+  */
+  public listarTapasIncompatibles(nombre: string): Observable<EmployeeTable> {
+    let params = new HttpParams();
+    params = params.append('jarName', nombre);
+    return this.httpCliente.get<EmployeeTable>(this.url + 'incompatible-caps', { headers: cabecera, params: params })
+  }
+
+  public guardarIncompatibles(nombreEnvase: string, tapas: string[],estado:boolean) {
+    const body = {
+      name: nombreEnvase,
+      caps: tapas,
+      active: estado
+    }
+    return this.httpCliente.put(this.url + `update/compatible`, body)
   }
 }
