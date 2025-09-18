@@ -27,14 +27,8 @@
     <img class="avatar " src="./assets/logo.png" />
     <mat-divider></mat-divider>
 
-
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/transacciones">
-      <mat-icon>playlist_add_check</mat-icon>
-      <span>transacciones</span>
-    </button>
-
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/tipos-envases/listar">
-      <mat-icon>playlist_add_check</mat-icon>
+      <mat-icon>category</mat-icon>
       <span>Tipos de envases</span>
     </button>
 
@@ -58,12 +52,6 @@
       <span>Combos</span>
     </button>
 
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/quimicos/listar">
-      <mat-icon>playlist_add_check</mat-icon>
-      <span>Quimicos</span>
-    </button>
-
-
     <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/compatibles">
       <mat-icon>sync_alt</mat-icon>
       <span>Compatibilidad</span>
@@ -86,10 +74,9 @@
       <span>Subir Excel</span>
     </button>
 
-    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="log/listar"
-      *ngIf="tokenService.validarRol('Administrador')">
+    <button mat-button class="menu-button" (click)="sidenav.close()" routerLink="/transacciones">
       <mat-icon>assignment</mat-icon>
-      <span>Log</span>
+      <span>Transacciones</span>
     </button>
   </mat-drawer>
 
