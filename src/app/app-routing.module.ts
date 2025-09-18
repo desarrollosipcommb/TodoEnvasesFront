@@ -11,6 +11,7 @@ import { QuimicosComponent } from './components/quimicos/quimicos.component';
 import { TapasComponent } from './components/tapas/tapas.component';
 import { SubirExcelComponent } from './components/subir-excel/subir-excel.component';
 import { CompatibilidadesComponent } from './components/compatibilidades/compatibilidades.component';
+import { ExtractosComponent } from './components/extractos/extractos.component';
 
 const routes: Routes = [
 
@@ -24,7 +25,8 @@ const routes: Routes = [
   { path: 'log/listar', component: LogsComponent },
   { path: 'error', component: ErrorPermisoComponent },
   { path: 'subir-excel', component: SubirExcelComponent },
-  { path: 'compatibles', component: CompatibilidadesComponent }
+  { path: 'compatibles', component: CompatibilidadesComponent },
+  { path: 'extractos', component: ExtractosComponent }
 
 ];
 

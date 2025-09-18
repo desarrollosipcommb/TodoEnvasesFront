@@ -71,8 +71,8 @@ export class EnvasesComponent implements OnInit, OnDestroy {
     private alerta: AlertaService,
     private router: Router,
     public tokenservice: TokenService,
-    
-  ) { 
+
+  ) {
 
   }
 
@@ -113,7 +113,7 @@ export class EnvasesComponent implements OnInit, OnDestroy {
 
   /**
      * Lista los envases registrados
-     * 
+     *
   */
   private listar(): void {
     this.envaseService.listarPagination(this.size, this.page, this.buscarnombres,this.buscarDiametro)
@@ -166,7 +166,7 @@ configs = {
 
 
 
-  
+
     openModal(template: TemplateRef<any>, envase: EnvaseModel | null, tipo: number): void {
       this.modalRef = this.modalservice.show(template, this.configs);
       this.limpiar();
@@ -242,7 +242,7 @@ configs = {
   }
 
   /**
-   * 
+   *
    * @returns retorna los datos en el formulario del template
    */
   getData() {
