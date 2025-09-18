@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
 
 
 export interface EmployeeTable {
-  data: ComboModel[];
-  currentPage: number;
-  totalItems: number;
+  content: ComboModel[];
+  number: number;
+  totalElements: number;
   totalPages: number;
 }
 

@@ -27,7 +27,7 @@ url = environment.baseUrl + 'jars/';
     * Lista los envases registradas
     * @returns Envases[] lista de envases
     */
-  public listarPagination(pageSize: number, pageNumber: number, nombre: string,diametro:string): Observable<EmployeeTable> {
+  public listarPagination(pageSize: number, pageNumber: number, nombre: string|null,diametro:string): Observable<EmployeeTable> {
     let params = new HttpParams();
     let header = new HttpHeaders();
     params = params.append('size', pageSize);
@@ -40,6 +40,18 @@ url = environment.baseUrl + 'jars/';
     }
 
     return this.httpCliente.get<EmployeeTable>(this.url + 'by-name-diameter', { headers: cabecera, params: params })
+  }
+
+    public listarCompatibleByEnvase( nombre: string|null): Observable<EmployeeTable> {
+    let params = new HttpParams();
+    let header = new HttpHeaders();
+    params = params.append('size', 5);
+    params = params.append('page', 0);
+    if(nombre && nombre.length > 0){
+      params = params.append('jarName', nombre);
+    }
+
+    return this.httpCliente.get<EmployeeTable>(this.url + 'compatible-caps', { headers: cabecera, params: params })
   }
 
   public listarActivos(): Observable<any> {
