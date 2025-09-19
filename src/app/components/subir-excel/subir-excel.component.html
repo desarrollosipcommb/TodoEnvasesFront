@@ -1,69 +1,67 @@
-
 <div class="cont">
-  <p>Subir archivos</p>
-  <div class="col-12 col-md-2">
-    <div class="row justify-content-start">
-      <div class="col-12 col-md-auto mb-2">
-        <button mat-raised-button class="agregar mt-3" color="primary" (click)="fileInput.click()">
-          <mat-icon>add</mat-icon>
-          <span>Seleccionar archivo</span>
-        </button>
-        <input #fileInput type="file" style="display: none;" (change)="onFileSelected($event)" />
-      </div>
+  <p>Inventarios</p>
+  <div class="row justify-content-start">
+    <div class="col-12 col-md-2 mb-2">
+      <button mat-raised-button class="agregar mt-3" color="primary" (click)="fileInput.click()">
+        <mat-icon>add</mat-icon>
+        <span>Añadir inventario</span>
+      </button>
+      <input #fileInput type="file" style="display: none;" (change)="confirmar($event,'AGREGAR')" />
+    </div>
+    <div class="col-12 col-md-2 mb-2">
+      <button mat-raised-button class="agregar mt-3" color="primary" (click)="fileInput.click()">
+        <mat-icon>add</mat-icon>
+        <span>Actualizar cantidades</span>
+      </button>
+      <input #fileInput type="file" style="display: none;" (change)="confirmar($event,'ACTUALIZAR')" />
     </div>
   </div>
 
-<div class="mb-3 d-flex align-items-center gap-4 flex-row">
-  <!-- Botones -->
-  <div class="btn-group">
-    <button *ngFor="let tipo of tipos"
-            class="btn btn-outline-primary"
-            [class.active]="tipo === tipoSeleccionado"
-            (click)="setTipoSeleccionado(tipo)">
-      {{ tipo | titlecase }}
-    </button>
+
+  <div class="mb-3 d-flex align-items-center gap-4 flex-row">
+    <!-- Botones -->
+    <div class="btn-group">
+      <button *ngFor="let tipo of tipos" class="btn btn-outline-primary" [class.active]="tipo === tipoSeleccionado"
+        (click)="setTipoSeleccionado(tipo)">
+        {{ tipo | titlecase }}
+      </button>
+    </div>
+    <!-- Leyenda de colores -->
+    <div class="d-flex align-items-center gap-3 flex-row">
+      <span class="d-flex align-items-center">
+        <span
+          style="display:inline-block;width:16px;height:16px;background:#fff3cd;border:1px solid #ffe066;margin-right:6px;"></span>
+        <small>Amarillo: producto ya existe</small>
+      </span>
+      <span class="d-flex align-items-center">
+        <span
+          style="display:inline-block;width:16px;height:16px;background:#f8d7da;border:1px solid #f44336;margin-right:6px;"></span>
+        <small>Rojo: error</small>
+      </span>
+      <span class="d-flex align-items-center">
+        <span
+          style="display:inline-block;width:16px;height:16px;background:#d4edda;border:1px solid #28a745;margin-right:6px;"></span>
+        <small>Verde: agregado correctamente</small>
+      </span>
+    </div>
   </div>
-  <!-- Leyenda de colores -->
-  <div class="d-flex align-items-center gap-3 flex-row">
-    <span class="d-flex align-items-center">
-      <span style="display:inline-block;width:16px;height:16px;background:#fff3cd;border:1px solid #ffe066;margin-right:6px;"></span>
-      <small>Amarillo: producto ya existe</small>
-    </span>
-    <span class="d-flex align-items-center">
-      <span style="display:inline-block;width:16px;height:16px;background:#f8d7da;border:1px solid #f44336;margin-right:6px;"></span>
-      <small>Rojo: error</small>
-    </span>
-    <span class="d-flex align-items-center">
-      <span style="display:inline-block;width:16px;height:16px;background:#d4edda;border:1px solid #28a745;margin-right:6px;"></span>
-      <small>Verde: agregado correctamente</small>
-    </span>
+
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+      <ng-container matColumnDef="fileName">
+        <th mat-header-cell *matHeaderCellDef>Archivo</th>
+        <td mat-cell *matCellDef="let element">{{ element.fileName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="message">
+        <th mat-header-cell *matHeaderCellDef>Mensaje</th>
+        <td mat-cell *matCellDef="let element">{{ element.message }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="getRowClass(row)"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="2">No hay datos</td>
+      </tr>
+    </table>
+    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
 </div>
-
-<div class="table-responsive">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
-    <ng-container matColumnDef="fileName">
-      <th mat-header-cell *matHeaderCellDef>Archivo</th>
-      <td mat-cell *matCellDef="let element">{{ element.fileName }}</td>
-    </ng-container>
-    <ng-container matColumnDef="message">
-      <th mat-header-cell *matHeaderCellDef>Mensaje</th>
-      <td mat-cell *matCellDef="let element">{{ element.message }}</td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="getRowClass(row)"></tr>
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="2">No hay datos</td>
-    </tr>
-  </table>
-  <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-</div>
-
-
-<ng-template #templateOn>
-
-</ng-template>
-
-<ng-template #templateLoading>
-
-</ng-template>
