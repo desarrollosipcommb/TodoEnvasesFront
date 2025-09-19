@@ -53,6 +53,7 @@ import { CombosComponent } from './components/combos/combos.component';
 import { VentasComponent } from './components/ventas/ventas.component';
 import { SubirExcelComponent } from './components/subir-excel/subir-excel.component';
 import { ExtractosComponent } from './components/extractos/extractos.component';
+import { HistorialVentasComponent } from './components/historial-ventas/historial-ventas.component';
 
 
 
@@ -83,6 +84,7 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
     VentasComponent,
     SubirExcelComponent,
     ExtractosComponent,
+    HistorialVentasComponent,
   ],
   imports: [
     HttpClientModule,

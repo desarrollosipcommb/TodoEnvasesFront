@@ -1,0 +1,169 @@
+<div class="cont">
+    <p>Historial de ventas</p>
+    <br>
+    <div class="row">
+        <div class="col-md-3">
+            <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+            <input type="date" id="fechaInicio" class="form-control" [formControl]="filtroFechaInicio">
+        </div>
+        <div class="col-md-3">
+            <label for="fechaFin" class="form-label">Fecha Fin</label>
+            <input type="date" id="fechaFin" class="form-control" [formControl]="filtroFechaFin">
+        </div>
+        <div class="col-md-3">
+            <label for="empleado" class="form-label">Empleado</label>
+            <input type="text" id="empleado" class="form-control" [formControl]="filtroEmpleado">
+        </div>
+        <div class="col-md-3" style="padding: 22px;">
+            <button class="btn-buscar" (click)="listar()" style="margin-right: 10px;">Buscar</button>
+            <button class="btn-buscar" (click)="limpiarFormulario()">Limpiar</button>
+        </div>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table">
+            <div class="card">
+                <div>
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+                   
+                        <ng-container matColumnDef="clientName">
+                            <th mat-header-cell *matHeaderCellDef>Cliente</th>
+                            <td mat-cell *matCellDef="let element">{{ element.clientName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="clientEmail">
+                            <th mat-header-cell *matHeaderCellDef>Email</th>
+                            <td mat-cell *matCellDef="let element">{{ element.clientEmail}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="clientPhone">
+                            <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+                            <td mat-cell *matCellDef="let element">{{ element.clientPhone}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fecha">
+                            <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                            <td mat-cell *matCellDef="let element">{{ element.saleDate}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="totalPrice">
+                            <th mat-header-cell *matHeaderCellDef class="text-end">Precio total</th>
+                            <td mat-cell *matCellDef="let element" class="text-end">{{ element.totalPrice| currency}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="detalle">
+                            <th mat-header-cell *matHeaderCellDef>Detalle </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button mat-icon-button (click)="openModal(templateOn, element)" aria-label="detalle">
+                                    <mat-icon>description</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                             <ng-container matColumnDef="sellerName">
+                            <th mat-header-cell *matHeaderCellDef>Vendedor</th>
+                            <td mat-cell *matCellDef="let element">{{ element.sellerName}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="7">No hay datos </td>
+                        </tr>
+                    </table>
+
+                    <mat-paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="totalItems"
+                        [pageSize]="size" [pageIndex]="page" [pageSizeOptions]="pageSizeOptions"
+                        [showFirstLastButtons]="true">
+                    </mat-paginator>
+
+                </div>
+
+            </div>
+        </table>
+    </div>
+</div>
+
+
+
+
+<ng-template #templateOn>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">{{tituloTemple}}</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" color="warn" aria-label="Close"
+                (click)="modalRef.hide()"></button>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label for="nombre-cliente">Cliente</mat-label>
+                        <input matInput type="text" id="nombre-cliente" class="form-control"
+                            ngModel="{{ventaModel.clientName}}" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label for="telefono-cliente">Teléfono</mat-label>
+                        <input matInput type="text" id="telefono-cliente" class="form-control"
+                            ngModel="{{ventaModel.clientEmail}}" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label for="email-cliente">Email</mat-label>
+                        <input matInput type="text" id="email-cliente" class="form-control"
+                            ngModel="{{ventaModel.clientEmail}}" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label for="fecha">Fecha</mat-label>
+                        <input matInput type="text" id="fecha" class="form-control" ngModel="{{ventaModel.saleDate}}"
+                            readonly>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label for="vendedor">Vendedor</mat-label>
+                        <input matInput type="text" id="vendedor" class="form-control"
+                            ngModel="{{ventaModel.sellerName}}" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div class="table-responsive-xxl shadow-sm rounded-3">
+                    <table class="table table-hover table-striped align-middle mb-0">
+                        <thead class="table text-center">
+                            <tr>
+                                <th scope="col" style="width: 5%">#</th>
+                                <th scope="col" class="text-start">Nombre</th>
+                                <th scope="col" class="text-end" style="width: 15%">Cantidad</th>
+                                <th scope="col" class="text-end" style="width: 20%">Precio Unitario</th>
+                                <th scope="col" class="text-end" style="width: 20%">Sub total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let detalle of ventaModel.saleItems; let i = index">
+                                <th scope="row" class="text-center">{{ i + 1 }}</th>
+                                <td class="">{{ detalle.name }}</td>
+                                <td class="text-end">{{ detalle.quantity }}</td>
+                                <td class="text-end">{{ detalle.unitPrice | currency:'USD' }}</td>
+                                <td class="text-end">{{ detalle.subtotal | currency:'USD' }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <td colspan="3"></td>
+                                <td class="fw-bold text-end">Total</td>
+                                <td class="fw-bold text-end">{{ ventaModel.totalPrice | currency:'USD' }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        (click)="modalRef.hide()">Volver</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

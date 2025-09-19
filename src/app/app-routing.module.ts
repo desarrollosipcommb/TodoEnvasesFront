@@ -11,6 +11,7 @@ import { QuimicosComponent } from './components/quimicos/quimicos.component';
 import { TapasComponent } from './components/tapas/tapas.component';
 import { SubirExcelComponent } from './components/subir-excel/subir-excel.component';
 import { ExtractosComponent } from './components/extractos/extractos.component';
+import { HistorialVentasComponent } from './components/historial-ventas/historial-ventas.component';
 
 const routes: Routes = [
 
@@ -24,7 +25,8 @@ const routes: Routes = [
   { path: 'log/listar', component: LogsComponent },
   { path: 'error', component: ErrorPermisoComponent },
   { path: 'subir-excel', component: SubirExcelComponent },
-  { path: 'extractos', component: ExtractosComponent }
+  { path: 'extractos', component: ExtractosComponent },
+  { path: 'historial-ventas', component: HistorialVentasComponent }
 
 ];
 

@@ -5,9 +5,9 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 
 export interface EmployeeTable {
-  data: VentaModel[];
-  currentPage: number;
-  totalItems: number;
+  content: VentaModel[];
+  number: number;
+  totalElements: number;
   totalPages: number;
 }
 
@@ -26,11 +26,17 @@ export class VentaService {
   * Lista las ventas registradas
   * @returns Ventas[] lista de ventas
   */
-  public listarPagination(pageSize: number, pageNumber: number): Observable<EmployeeTable> {
+  public listarPagination(pageSize: number, pageNumber: number, fechaInicio: string, fechaFin: string, nombreUsuario: string): Observable<EmployeeTable> {
     let params = new HttpParams();
     params = params.append('size', pageSize);
     params = params.append('page', pageNumber);
-    return this.httpCliente.get<EmployeeTable>(this.url + 'all', { headers: cabecera, params: params })
+    params = params.append('fechaInicio', fechaInicio);
+    params = params.append('fechaFin', fechaFin);
+    if (nombreUsuario != null && nombreUsuario != '') {
+      params = params.append('sellerName', nombreUsuario);
+    }
+
+    return this.httpCliente.get<EmployeeTable>(this.url + 'like-sellerName-range', { headers: cabecera, params: params })
   }
 
   /**
