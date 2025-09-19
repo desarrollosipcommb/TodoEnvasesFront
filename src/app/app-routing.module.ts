@@ -13,6 +13,7 @@ import { SubirExcelComponent } from './components/subir-excel/subir-excel.compon
 import { CompatibilidadesComponent } from './components/compatibilidades/compatibilidades.component';
 import { ExtractosComponent } from './components/extractos/extractos.component';
 import { TransaccionesComponent } from './components/transacciones/transacciones.component';
+import { HistorialVentasComponent } from './components/historial-ventas/historial-ventas.component';
 
 const routes: Routes = [
 
@@ -28,7 +29,8 @@ const routes: Routes = [
   { path: 'subir-excel', component: SubirExcelComponent },
   { path: 'compatibles', component: CompatibilidadesComponent },
   { path: 'extractos', component: ExtractosComponent },
-  { path: 'transacciones', component: TransaccionesComponent }
+  { path: 'transacciones', component: TransaccionesComponent },
+  { path: 'historial-ventas', component: HistorialVentasComponent }
 
 ];
 

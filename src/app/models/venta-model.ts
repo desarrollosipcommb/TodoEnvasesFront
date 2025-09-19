@@ -5,7 +5,7 @@ export class VentaModel {
     descripion: string
     paymentMethod: string
     saleDate: string
-    items: itemsModel
+    items: itemsModel[]
 }
 
 export class itemsModel {

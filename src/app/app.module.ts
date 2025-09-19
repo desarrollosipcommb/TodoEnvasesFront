@@ -57,6 +57,7 @@ import { ExtractosComponent } from './components/extractos/extractos.component';
 import { TransaccionesComponent } from './components/transacciones/transacciones.component';
 import { ItemTypeLabel } from './pipes/transactions.pipe';
 import { transactionTypeLabel } from './pipes/transactions.pipe';
+import { HistorialVentasComponent } from './components/historial-ventas/historial-ventas.component';
 
 
 
@@ -90,7 +91,8 @@ export class CustomVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy 
     ExtractosComponent,
     TransaccionesComponent,
     ItemTypeLabel,
-    transactionTypeLabel
+    transactionTypeLabel,
+    HistorialVentasComponent,
   ],
   imports: [
     HttpClientModule,
